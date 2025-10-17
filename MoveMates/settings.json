@@ -1,0 +1,7 @@
+{
+    "workbench.colorTheme": "Default High Contrast",
+    "liveServer.settings.donotShowInfoMsg": true,
+    "vscode-edge-devtools.webhintInstallNotification": true,
+    "cmake.configureOnOpen": true,
+    "php.debug.executablePath": ""
+}
