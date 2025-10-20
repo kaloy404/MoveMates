@@ -71,6 +71,105 @@ nav a:hover {
   align-items: center;
 }
 
+.name-fields {
+  display: flex;
+  gap: 10px;
+}
+
+.name-fields .field {
+  flex: 1;
+}
+
+.modal-content input[type="tel"],
+.modal-content input[type="text"],
+.modal-content input[type="email"],
+.modal-content input[type="password"] {
+  width: 100%;
+  padding: 10px;
+  border: 1px solid #ccc;
+  border-radius: 6px;
+  font-size: 0.95rem;
+  box-sizing: border-box;
+}
+
+/* === Make Phone Input Match Other Fields === */
+.iti {
+  width: 100%;
+}
+
+.iti input[type="tel"],
+#phone {
+  width: 100%;
+  padding: 10px;
+  border: 1px solid #ccc;
+  border-radius: 6px;
+  font-size: 0.95rem;
+  outline: none;
+  transition: border-color 0.2s;
+  height: 40px; /* same height as other inputs */
+  box-sizing: border-box;
+}
+
+/* When focused */
+.iti input[type="tel"]:focus,
+#phone:focus {
+  border-color: #00bcd4;
+  box-shadow: 0 0 3px rgba(0, 188, 212, 0.3);
+}
+
+/* Flag section alignment */
+.iti__selected-flag {
+  height: 100%;
+  padding: 0 10px;
+  background: #fff;
+  border-right: 1px solid #ccc;
+  border-radius: 6px 0 0 6px;
+}
+
+/* Country dropdown scroll */
+.iti__country-list {
+  max-height: 200px;
+  overflow-y: auto;
+}
+
+/* Optional: placeholder color consistency */
+#phone::placeholder {
+  color: #999;
+}
+
+/* Wrapper ensures intl-tel-input fills correctly */
+.phone-wrapper {
+  width: 100%;
+  position: relative;
+}
+
+/* Force the intl-tel-input container to full width */
+.phone-wrapper .iti {
+  width: 100% !important;
+}
+
+/* Adjust the actual phone input box */
+.phone-wrapper input#phone {
+  width: 100% !important;
+  height: 45px !important; /* Adjust height here */
+  padding: 10px 12px 10px 48px !important; /* left space for flag */
+  font-size: 1rem;
+  border: 1px solid #ccc;
+  border-radius: 6px;
+  box-sizing: border-box;
+}
+
+/* Align flag nicely inside the input */
+.phone-wrapper .iti__flag-container {
+  height: 100%;
+}
+
+/* Dropdown scrollable */
+.iti__country-list {
+  max-height: 200px;
+  overflow-y: auto;
+}
+
 .modal-content {
   position: relative;
   background: white;
@@ -191,7 +290,7 @@ nav a:hover {
 
 /* HERO SECTION */
 .hero-section {
-  background: url('../src/images/background.jpg') center/cover no-repeat;
+  background: url('../../src/images/background.jpg') center/cover no-repeat;
   min-height: 100vh;
   display: flex;
   justify-content: center;
