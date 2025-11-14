@@ -93,6 +93,12 @@ document.addEventListener("DOMContentLoaded", () => {
     }
   }
 
+  // --- Helper: reset sign-in form fully ---
+  function resetSignInForm() {
+    const form = signInModal.querySelector("form");
+    if (form) form.reset();
+  }
+
   // --- Open Sign In ---
   if (userIcon) {
     userIcon.addEventListener("click", () => {
@@ -104,8 +110,7 @@ document.addEventListener("DOMContentLoaded", () => {
   if (closeSignIn) {
     closeSignIn.addEventListener("click", () => {
       signInModal.style.display = "none";
-      const form = signInModal.querySelector("form");
-      if (form) form.reset();
+      resetSignInForm();
     });
   }
 
@@ -122,6 +127,7 @@ document.addEventListener("DOMContentLoaded", () => {
     openSignUp.addEventListener("click", (e) => {
       e.preventDefault();
       signInModal.style.display = "none";
+      resetSignUpForm();
       signUpModal.style.display = "flex";
 
       const phoneInput = document.querySelector("#phone");
@@ -130,11 +136,18 @@ document.addEventListener("DOMContentLoaded", () => {
         iti = window.intlTelInput(phoneInput, {
           initialCountry: "auto",
           geoIpLookup: function (callback) {
-            fetch("https://ipapi.co/json")
-              .then((res) => res.json())
-              .then((data) => callback(data.country_code))
-              .catch(() => callback("us"));
-          },
+  fetch("https://ipapi.co/json/")
+    .then((res) => res.json())
+    .then((data) => {
+      if (data && data.country_code) {
+        callback(data.country_code.toLowerCase());
+      } else {
+        callback("us");
+      }
+    })
+    .catch(() => callback("us"));
+},
+
           preferredCountries: ["ph", "us", "jp", "ca", "gb"],
           autoPlaceholder: "aggressive",
           nationalMode: false,
@@ -143,17 +156,22 @@ document.addEventListener("DOMContentLoaded", () => {
             "https://cdnjs.cloudflare.com/ajax/libs/intl-tel-input/17.0.19/js/utils.js",
         });
 
-        // Update placeholder dynamically
-        phoneInput.addEventListener("countrychange", () => {
-          phoneInput.placeholder = iti.getNumberPlaceholder();
-        });
+        iti.promise.then(() => {
+  // Set initial placeholder once utils are ready
+  phoneInput.placeholder = iti.getNumberPlaceholder();
 
-        // Prevent placeholder override when typing
-        phoneInput.addEventListener("focus", () => {
-          if (!phoneInput.value) {
-            phoneInput.placeholder = iti.getNumberPlaceholder();
-          }
-        });
+  // Update dynamically on country change
+  phoneInput.addEventListener("countrychange", () => {
+    phoneInput.placeholder = iti.getNumberPlaceholder();
+  });
+
+  // Keep placeholder when focusing an empty input
+  phoneInput.addEventListener("focus", () => {
+    if (!phoneInput.value) {
+      phoneInput.placeholder = iti.getNumberPlaceholder();
+    }
+  });
+});
 
         // Validate on blur
         phoneInput.addEventListener("blur", () => {
@@ -174,32 +192,14 @@ document.addEventListener("DOMContentLoaded", () => {
       }
     });
   }
-
   // --- Switch to Sign In ---
- if (openSignIn) {
-  openSignIn.addEventListener("click", (e) => {
-    e.preventDefault();
-    signUpModal.style.display = "none";
-
-    // 🧹 Clear all data like when closing the form
-    const form = signUpModal.querySelector("form");
-    const phoneInput = document.querySelector("#phone");
-    const errorMsg = document.querySelector("#phone-error");
-
-    if (form) form.reset();
-    if (phoneInput) {
-      phoneInput.value = "";
-      phoneInput.style.borderColor = "#ccc";
-    }
-    if (errorMsg) errorMsg.style.display = "none";
-
-    if (typeof iti !== "undefined" && iti) {
-      iti.destroy();
-      iti = null;
-      phoneInput.classList.remove("iti-initialized");
-    }
-
-    signInModal.style.display = "flex";
-  });
-}
+  if (openSignIn) {
+    openSignIn.addEventListener("click", (e) => {
+      e.preventDefault();
+      signUpModal.style.display = "none";
+      resetSignUpForm(); // 🧹 Clear everything from sign-up
+      signInModal.style.display = "flex";
+      resetSignInForm(); // 🧼 Also reset sign-in form cleanly
+    });
+  }
 });

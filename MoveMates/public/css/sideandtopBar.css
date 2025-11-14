@@ -1,0 +1,136 @@
+/* === GLOBAL === */
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600&display=swap');
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: 'Poppins', sans-serif;
+  background: #f0f2f5;
+  color: #222;
+}
+
+/* ============================= */
+/* TOPBAR */
+/* ============================= */
+.topbar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background: #111;
+  color: white;
+  padding: 10px 25px;
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 1000;
+  height: 70px;
+}
+
+.topbar .logo {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 20px;
+  font-weight: bold;
+}
+
+.topbar .logo i {
+  color: #00b8ff;
+}
+
+.topbar a {
+  color: white;
+  text-decoration: none;
+  font-weight: 500;
+}
+
+/* ============================= */
+/* SIDEBAR */
+/* ============================= */
+.sidebar {
+  width: 240px;
+  background: #2c2c2c;
+  color: white;
+  height: 100vh;
+  padding-top: 70px;
+  position: fixed;
+  left: 0;
+  top: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 15px;
+}
+
+.sidebar img {
+  width: 80px;
+  height: 80px;
+  border-radius: 50%;
+}
+
+.sidebar p {
+  margin: 5px 0;
+  font-size: 0.9rem;
+}
+
+.sidebar a {
+  display: block;
+  width: 80%;
+  text-align: center;
+  padding: 10px;
+  border-radius: 8px;
+  text-decoration: none;
+  color: white;
+  font-weight: 500;
+  transition: background 0.2s;
+}
+
+.sidebar a:hover {
+  background: #444;
+}
+
+.sidebar .active {
+  background: #fff;
+  color: #2c2c2c;
+}
+
+/* COMMON CONTENT WRAPPER */
+.content {
+  margin-left: 260px;
+  padding: 80px 30px;
+}
+
+/* ============================= */
+/* RESPONSIVE */
+/* ============================= */
+@media (max-width: 992px) {
+  .sidebar {
+    width: 200px;
+  }
+
+  .content {
+    margin-left: 210px;
+  }
+}
+
+@media (max-width: 768px) {
+  .sidebar {
+    width: 100%;
+    height: auto;
+    position: relative;
+    flex-direction: row;
+    justify-content: space-around;
+    padding: 10px 0;
+  }
+
+  .content {
+    margin-left: 0;
+    margin-top: 80px;
+    padding: 20px;
+  }
+}

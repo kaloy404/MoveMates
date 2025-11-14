@@ -1,3 +1,7 @@
+<?php
+include '../db/db_connect.php';
+session_start();
+?>
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -46,7 +50,8 @@
       <h2>Welcome Back</h2>
     </div>
 
-    <form>
+     <!-- Sign In Form -->
+     <form action="signin_process.php" method="POST">
       <label for="emailSignIn">Email Address</label>
       <input type="email" id="emailSignIn" name="emailSignIn" placeholder="Enter your email" required>
 
@@ -80,9 +85,10 @@
       <h2>Create Your Account</h2>
     </div>
 
-    <form>
+     <!-- Sign Up Form -->
+    <form action="signup_process.php" method="POST">
       <div class="name-fields">
-  <div class="field">
+       <div class="field">
     <label for="firstName">Name</label>
     <input type="text" id="firstName" name="firstName" placeholder="John" required>
   </div>
