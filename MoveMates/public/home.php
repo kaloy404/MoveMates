@@ -22,8 +22,8 @@ session_start();
   <!-- Navbar -->
 <header class="navbar">
   <div class="logo">
-    <i class="fas fa-home"></i>
-    <span>MoveMates</span>
+    <img class="logo-img" src="../src/icons/home.png" alt="logo">
+    <p>MoveMates</p>
   </div>
 
   <nav>

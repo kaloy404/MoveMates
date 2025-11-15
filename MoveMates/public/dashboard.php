@@ -1,3 +1,12 @@
+<?php
+session_start();
+include '../db/db_connect.php';
+
+// Get only BUY listings
+$sql = "SELECT * FROM properties WHERE listing_type = 'Sale' ORDER BY id DESC";
+$result = $conn->query($sql);
+?>
+
 <!DOCTYPE html>
 <html>
 <head>
@@ -15,8 +24,9 @@
   <!-- HEADER -->
   <div class="topbar">
     <div class="logo">
+      <img src="../src/icons/hom.png" alt="logo">
       <i class="fa-solid fa-house"></i>
-      MoveMates
+      <p>MoveMates</p>
     </div>
     <a href="home.php">Logout</a>
   </div>
@@ -42,40 +52,31 @@
       </div>
     </div>
 
-    <!-- PROPERTY LIST -->
-    <div class="property-list" id="propertyList">
-      <!-- Dynamic placeholders (to be generated from database later) -->
-      <div class="property-card">
-        <img src="../src/images/1.jpg" alt="House 1">
-        <div class="property-info">
-          <div class="placeholder line1"></div>
-          <div class="placeholder line2"></div>
-          <div class="placeholder line3"></div>
-          <a href="#" class="details-btn">Details</a>
-        </div>
-      </div>
+<div class="property-list" id="propertyList">
+<?php
+if ($result->num_rows > 0) {
+    while ($row = $result->fetch_assoc()) {
+?>
+        <div class="property-card">
+            <img src="<?= $row['image_url']; ?>" alt="Property Image">
 
-      <div class="property-card">
-        <img src="../src/images/2.jpg" alt="House 2">
-        <div class="property-info">
-          <div class="placeholder line1"></div>
-          <div class="placeholder line2"></div>
-          <div class="placeholder line3"></div>
-          <a href="#" class="details-btn">Details</a>
-        </div>
-      </div>
+            <div class="property-info">
+                <p><strong><?= $row['property_type']; ?></strong></p>
+                <p><?= $row['address']; ?></p>
+                <p>₱ <?= number_format($row['price']); ?></p>
 
-      <div class="property-card">
-        <img src="../src/images/3.jpg" alt="House 3">
-        <div class="property-info">
-          <div class="placeholder line1"></div>
-          <div class="placeholder line2"></div>
-          <div class="placeholder line3"></div>
-          <a href="#" class="details-btn">Details</a>
+                <a href="property_details.php?id=<?= $row['id']; ?>" class="details-btn">Details</a>
+            </div>
         </div>
-      </div>
-    </div>
-  </div>
+<?php
+    }
+} else {
+    echo "<p>No properties for sale.</p>";
+}
+?>
+</div>
+
+
 
 </body>
 </html>

@@ -21,6 +21,13 @@
   width: 100%;
   top: 0;
   z-index: 100;
+  height: 70px;
+}
+
+.logo-img{
+height: 50px;
+width: 50px;
+margin-right: 15px;
 }
 
 .logo {
@@ -30,12 +37,13 @@
   font-size: 1.2rem;
 }
 
-.logo i {
-  color: #0ef;
-  font-size: 1.5rem;
-  margin-right: 8px;
+p{
+  margin-right: 0px;
 }
 
+nav{
+  margin-right: 150px;
+}
 nav a {
   color: white;
   text-decoration: none;

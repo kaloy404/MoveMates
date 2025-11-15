@@ -1,7 +1,55 @@
 <?php
-include '../db/db_connect.php';
 session_start();
+include '../db/db_connect.php';
+
+$property_id = $_GET['id'];
+$user_id = $_SESSION['user_id'];
+
+// Fetch property
+$sql = "SELECT * FROM properties WHERE id = ? AND owner_id = ?";
+$stmt = $conn->prepare($sql);
+$stmt->bind_param("ii", $property_id, $user_id);
+$stmt->execute();
+$result = $stmt->get_result();
+$row = $result->fetch_assoc();
+
+if (!$row) {
+    die("Property not found");
+}
+
+// Update form submitted
+if ($_SERVER["REQUEST_METHOD"] == "POST") {
+    $listing_type  = $_POST['listing_type'];
+    $property_type = $_POST['property_type'];
+    $address       = $_POST['address'];
+    $phone_number  = $_POST['phone_number'];
+    $price         = $_POST['price'];
+    $description   = $_POST['description'];
+
+    // Query updates
+    $sql = "UPDATE properties SET listing_type=?, property_type=?, address=?, phone_number=?, price=?, description=? 
+            WHERE id=? AND owner_id=?";
+    
+    $stmt = $conn->prepare($sql);
+    $stmt->bind_param("ssssissi",
+        $listing_type, 
+        $property_type, 
+        $address, 
+        $phone_number, 
+        $price, 
+        $description, 
+        $property_id,
+        $user_id
+    );
+
+    if ($stmt->execute()) {
+        echo "<script>alert('Property updated!'); window.location.href='properties.php';</script>";
+    } else {
+        echo "Update failed: " . $conn->error;
+    }
+}
 ?>
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -39,9 +87,9 @@ session_start();
 
 <div class="content">
   <div class="property-form-container">
-    <h2>Add Property</h2>
+    <h2>Update Property</h2>
 
-    <form action="addproperty_process.php" method="POST" enctype="multipart/form-data" class="property-grid">
+    <form method="POST" enctype="multipart/form-data" class="property-grid">
 <!-- IMAGE UPLOAD SECTION -->
 <div class="upload-section">
 
@@ -66,49 +114,44 @@ session_start();
       <div>
         <label>Property For:</label>
         <select name="listing_type" required>
-          <option>Rent</option>
-          <option>Sale</option>
+          <option value="Rent" <?= $row['listing_type']=="Rent"?"selected":"" ?>>Rent</option>
+          <option value="Sale" <?= $row['listing_type']=="Sale"?"selected":"" ?>>Sale</option>
         </select>
       </div>
 
       <div>
         <label>Property Type:</label>
         <select name="property_type">
-          <option>House</option>
-          <option>Apartment</option>
-          <option>Room</option>
+          <option value="House" <?= $row['listing_type']=="House"?"selected":"" ?>>House</option>
+          <option value="Apartment" <?= $row['listing_type']=="Apartment"?"selected":"" ?>>Apartment</option>
+          <option value="Room" <?= $row['listing_type']=="Room"?"selected":"" ?>>Room</option>
         </select>
       </div>
 
       <div>
         <label>Address:</label>
-        <input type="text" name="address" placeholder="Enter property address" required>
+        <input type="text" name="address" value="<?= $row['address']; ?>">
       </div>
 
       <div>
         <label>Phone Number:</label>
-        <input type="text" name="phone_number" placeholder="Contact number" required>
+        <input type="text" name="phone_number" value="<?= $row['phone_number']; ?>">
       </div>
 
       <div>
         <label>Price:</label>
-        <input type="number" name="price" placeholder="₱Enter price" required>
+        <input type="number" name="price" value="<?= $row['price']; ?>">
       </div>
 
       <div class="property-grid-full">
         <label>Description:</label>
-        <textarea name="description" placeholder="Describe your property..." required></textarea>
+        <textarea name="description"><?= $row['description']; ?></textarea>
       </div>
 
       <!-- ✔️ FIXED: SUBMIT BUTTON INSIDE FORM -->
-      <button type="submit" class="add-btn">Add Property</button>
+      <button type="submit" class="add-btn">Update</button>
 
     </form>
 
   </div> 
 </div>
-
-<script src="js/addproperty.js"></script>
-
-</body>
-</html>
