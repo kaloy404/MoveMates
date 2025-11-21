@@ -1,0 +1,269 @@
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800;900&display=swap');
+
+/* GLOBAL */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  scroll-behavior: smooth;
+  font-family: 'Poppins', sans-serif;
+}
+
+/* ===========================
+   NAVBAR
+=========================== */
+.navbar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background: rgba(255, 255, 255, 0.15);
+    backdrop-filter: blur(12px);
+    padding: 10px 30px;
+    position: fixed;
+    top: 0;
+    width: 100%;
+    height: 70px;
+    z-index: 100;
+    color: white;
+}
+
+/* Logo + Text Alignment */
+.logo {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.logo img {
+    width: 45px;
+    height: 45px;
+    border-radius: 50%;
+    object-fit: cover;
+}
+
+.logo p{
+    font-family: "Orbitron", sans-serif;
+    font-weight: 700;
+    font-size: 1.2rem;
+    letter-spacing: 2px;
+}
+
+/* ===========================
+   NAV LINKS
+=========================== */
+nav {
+    display: flex;
+    gap: 30px;
+}
+
+nav a,
+.logout {
+    font-family: "Orbitron", sans-serif;
+    color: white;
+    text-decoration: none;
+    transition: color 0.3s;
+}
+
+nav a.active,
+nav a:hover,
+.logout:hover {
+    color: rgb(172, 39, 39);
+}
+
+
+/* HOME SECTION (like the sample layout) */
+.home-section {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 120px 80px; 
+    min-height: 100vh;
+    background-image: linear-gradient(to left, #0c0f15, #681c07);
+    color: white;
+}
+
+/* TEXT LEFT SIDE */
+.text-container {
+    max-width: 500px;
+}
+
+.text-container .hello {
+    font-size: 2rem;
+    font-weight: 600;
+}
+
+.text-container .dot {
+    color: #ff6f61;
+}
+
+.text-container .name {
+    margin-top: 10px;
+    font-size: 2.2rem;
+    font-weight: 500;
+    opacity: .9;
+}
+
+.text-container .role {
+    font-size: 3rem;
+    font-weight: 700;
+    margin: 20px 0 30px;
+}
+
+/* BUTTONS */
+.buttons {
+    display: flex;
+    gap: 15px;
+    margin-top: 20px;
+}
+
+.btn {
+    padding: 12px 25px;
+    border-radius: 4px;
+    text-decoration: none;
+    font-size: 1rem;
+    transition: .3s;
+}
+
+.btn.primary {
+    background: #ff6f61;
+    color: white;
+}
+
+.btn.primary:hover {
+    opacity: 0.8;
+}
+
+.btn.outline {
+    border: 2px solid #ff6f61;
+    color: #ff6f61;
+}
+
+.btn.outline:hover {
+    background: #ff6f61;
+    color: #fff;
+}
+
+/* IMAGE RIGHT SIDE */
+.img-container {
+    position: relative;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-right: 170px;
+}
+
+.img-container .img-bg {
+    position: absolute;
+    width: 350px;
+    height: 350px;
+    border-radius: 50%;
+    background: radial-gradient(circle, rgba(255,106,61,0.4), rgba(0,0,0,0));
+    z-index: 0;
+    box-shadow: 0 0 40px rgba(255, 106, 61, 0.4);
+}
+
+.img-container img {
+    position: relative;
+    width: 330px;       /* match the circle background */
+    height: 330px;      /* make it square to become perfectly round */
+    object-fit: cover;  /* crops nicely inside the circle */
+    border-radius: 50%; /* makes it round */
+    z-index: 1;
+}
+
+/* RESPONSIVE */
+@media (max-width: 900px) {
+    .home-section {
+        flex-direction: column;
+        text-align: center;
+        padding: 100px 30px;
+    }
+
+    .img-container {
+        margin-top: 40px;
+    }
+}
+
+.about-section{
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 120px 80px; 
+    min-height: 100vh;
+    background-image: linear-gradient(to right, #0c0f15, #681c07);
+}
+
+.tools-section{
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 120px 80px; 
+    min-height: 100vh;
+    background-image: linear-gradient(to left, #0c0f15, #681c07);
+}
+
+.contact-section{
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 120px 80px; 
+    min-height: 100vh;
+    background-image: linear-gradient(to right, #0c0f15, #681c07);
+}
+
+/* FOOTER */
+.footer {
+  width: 100%;
+  height: 100px;
+  background: #111;
+  color: #fff;
+  text-align: center;
+  padding: 15px 0;
+  font-size: 0.9rem;
+}
+
+.footer hr {
+  width: 80%;
+  margin: 0 auto 10px;
+  border: 0.5px solid #ccc;
+}
+
+/* Tablets */
+@media (max-width: 768px) {
+  .navbar {
+    padding: 10px 20px;
+  }
+
+  nav {
+    gap: 12px;
+  }
+
+  nav a {
+    font-size: 0.9rem;
+  }
+}
+
+/* Phones */
+@media (max-width: 480px) {
+
+  .navbar {
+    flex-direction: column;
+    justify-content: center;
+    height: auto;
+    padding: 10px;
+  }
+
+  nav {
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 10px;
+  }
+
+  nav a {
+    font-size: 0.85rem;
+  }
+
+  .home-section {
+    padding-top: 100px; /* navbar is taller now */
+  }
+}
