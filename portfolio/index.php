@@ -49,17 +49,17 @@
 
     <div class="services">
         <div class="service-item">
-            <img src="img/4.svg" alt="service1">
+            <img src="img/24.svg" alt="service1">
             <p>Web Development</p>
         </div>
 
         <div class="service-item">
-            <img src="img/5.svg" alt="service2">
+            <img src="img/25.svg" alt="service2">
             <p>App Development</p>
         </div>
 
         <div class="service-item">
-            <img src="img/6.svg" alt="service3">
+            <img src="img/26.svg" alt="service3">
             <p>Game Development</p>
         </div>
     </div>
@@ -114,9 +114,39 @@
         </div>
     </div>
 </section>
+<div class="tools-carousel-container">
+    <h2 class="tools-title">Softwares I Use</h2>
 
+     <div class="tools-marquee">
+        <div class="tools-track">
+        <div class="tool-card"><img src="img/11.png" alt="HTML"></div>
+        <div class="tool-card"><img src="img/13.svg" alt="CSS"></div>
+        <div class="tool-card"><img src="img/14.svg" alt="Javascript"></div>
+        <div class="tool-card"><img src="img/15.svg" alt="Git"></div>
+        <div class="tool-card"><img src="img/11.svg" alt="Bootstrap"></div>
+        <div class="tool-card"><img src="img/10.svg" alt="Visual Studio"></div>
+        <div class="tool-card"><img src="img/4.svg" alt="Chatgpt"></div>
+        <div class="tool-card"><img src="img/5.svg" alt="PHP"></div>
+        <div class="tool-card"><img src="img/6.svg" alt="MySQL"></div>
+        <div class="tool-card"><img src="img/7.svg" alt="Xampp"></div>
+        <div class="tool-card"><img src="img/8.svg" alt="Canva"></div>
+        <div class="tool-card"><img src="img/9.svg" alt="Java"></div>
 
-
+        <div class="tool-card"><img src="img/11.png" alt="HTML"></div>
+        <div class="tool-card"><img src="img/13.svg" alt="CSS"></div>
+        <div class="tool-card"><img src="img/14.svg" alt="Javascript"></div>
+        <div class="tool-card"><img src="img/15.svg" alt="Git"></div>
+        <div class="tool-card"><img src="img/11.svg" alt="Bootstrap"></div>
+        <div class="tool-card"><img src="img/10.svg" alt="Visual Studio"></div>
+        <div class="tool-card"><img src="img/4.svg" alt="Chatgpt"></div>
+        <div class="tool-card"><img src="img/5.svg" alt="PHP"></div>
+        <div class="tool-card"><img src="img/6.svg" alt="MySQL"></div>
+        <div class="tool-card"><img src="img/7.svg" alt="Xampp"></div>
+        <div class="tool-card"><img src="img/8.svg" alt="Canva"></div>
+        <div class="tool-card"><img src="img/9.svg" alt="Java"></div>
+    </div>
+    </div>
+    </div>
 <section class="contact-section" id="contact">
 
 </section>
