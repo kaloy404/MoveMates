@@ -58,7 +58,7 @@ nav {
 
 nav a,
 .logout {
-    font-family: "Orbitron", sans-serif;
+    font-family: "Poppins", sans-serif;
     color: white;
     text-decoration: none;
     transition: color 0.3s;
@@ -186,21 +186,199 @@ nav a:hover,
 
 .about-section{
     display: flex;
+    flex-direction: row;
     justify-content: space-between;
-    align-items: center;
+    align-items:flex-start;
     padding: 120px 80px; 
     min-height: 100vh;
+    gap: 60px;
     background-image: linear-gradient(to right, #0c0f15, #681c07);
+}
+
+/* RIGHT SIDE - SERVICES */
+.services {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 35px;
+    margin-top: 35px;
+}
+
+.service-item {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+}
+
+.service-item img {
+    width: 160px;
+    height: 160px;
+}
+
+.service-item p {
+    font-size: 1.2rem;
+    color: white;
+    font-weight: 600;
+}
+
+.abouts {
+    flex: 1;
+}
+
+.abouts h2 {
+    font-family: "Orbitron", sans-serif;
+    font-size: 2.5rem;
+    color: white;
+    font-weight: 700;
+    margin-bottom: 15px;
+    margin-top: 200px;
+}
+
+.abouts p {
+    font-size: 1.1rem;
+    color: white;
+    line-height: 1.7rem;
+    opacity: 0.9;
+}
+
+/* RESPONSIVE */
+@media (max-width: 900px) {
+    .about-section {
+        flex-direction: column;
+        text-align: center;
+    }
+
+    .services {
+        align-items: center;
+    }
 }
 
 .tools-section{
     display: flex;
-    justify-content: space-between;
+    flex-direction: column;
+    justify-content: center;
     align-items: center;
     padding: 120px 80px; 
     min-height: 100vh;
     background-image: linear-gradient(to left, #0c0f15, #681c07);
 }
+
+/* TITLE */
+.project-title h1 {
+    font-family: "Orbitron", sans-serif;
+    font-size: 3rem;
+    font-weight: 700;
+    color: white;
+    margin-bottom: 50px;
+    text-align: center;
+}
+
+.projects-grid {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: flex-start;
+    gap: 35px;
+    flex-wrap: nowrap;   /* prevents wrapping to next line */
+}
+
+
+
+.project-card { 
+    position: relative;
+    background: #6d2626;
+    padding: 30px;
+    border-radius: 18px; 
+    width: 330px; 
+    box-shadow: 0 0 20px rgba(0,0,0,0.45); 
+    transition: 0.3s ease; 
+    text-align: center; 
+    overflow: hidden; /* important for glow */
+    z-index: 1;
+}
+
+
+.project-card::before {
+    content: "";
+    position: absolute;
+    inset: -3px; /* outer border thickness */
+    border-radius: 20px;
+
+    background: conic-gradient(
+        from 0deg,
+        #ff4d4d,
+        #ff0000,
+        #ff6b6b,
+        #ff4040,
+        #ff4d4d
+    );
+
+    animation: rotateBorder 6s linear infinite;
+
+    z-index: -1;
+}
+
+.project-card::after {
+    content: "";
+    position: absolute;
+    inset: 2px; /* inner cutout thickness */
+    background: #6d2626; 
+    border-radius: 16px;
+    z-index: 0;
+}
+
+.project-card > * {
+    position: relative;
+    z-index: 2;
+}
+
+@keyframes rotateBorder {
+    0%   { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}
+
+/* IMAGE */
+.project-card img {
+    width: 100%;
+    height: 190px;
+    object-fit: cover;
+    border-radius: 12px;
+    margin-bottom: 20px;
+}
+
+/* PROJECT NAME */
+.project-card .project-name {
+    font-size: 1.4rem;
+    margin-bottom: 15px;
+    font-weight: 600;
+}
+
+.project-name{
+    color: white;
+}
+
+/* TECH STACK */
+.tech-stack {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 10px;
+}
+
+.tech-stack span {
+    background: #1a2233;
+    padding: 8px 14px;
+    color:white;
+    border-radius: 10px;
+    font-size: 0.9rem;
+    border: 1px solid #2c3547;
+    transition: .2s ease;
+}
+
+.tech-stack span:hover {
+    background: #2b3a55;
+}
+
 
 .contact-section{
     display: flex;
@@ -267,3 +445,4 @@ nav a:hover,
     padding-top: 100px; /* navbar is taller now */
   }
 }
+
