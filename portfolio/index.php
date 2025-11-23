@@ -8,8 +8,7 @@
     <link rel="icon" href="img/icon.png">
     <link rel='stylesheet' href='css/index.css'>
     <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@500;700&display=swap" rel="stylesheet">
-
-    <script src='main.js'></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
 </head>
 <body>
 <header class="navbar">
@@ -115,7 +114,7 @@
     </div>
 </section>
 <div class="tools-carousel-container">
-    <h2 class="tools-title">Softwares I Use</h2>
+    <h2 class="tools-title">Softwares & Tools I Use</h2>
 
      <div class="tools-marquee">
         <div class="tools-track">
@@ -149,15 +148,52 @@
     </div>
 <section class="contact-section" id="contact">
 
+    <div class="contact-left">
+        <p class="contact-subtitle">Contacts</p>
+        <h1 class="contact-title">Have a project?<br>Let’s talk!</h1>
+
+        <button class="contact-submit-left">Submit</button>
+    </div>
+
+    <form class="contact-right">
+        <div class="form-group">
+            <label>Name</label>
+            <input type="text" required>
+        </div>
+
+        <div class="form-group">
+            <label>Email</label>
+            <input type="email" required>
+        </div>
+
+        <div class="form-group">
+            <label>Message</label>
+            <textarea required></textarea>
+        </div>
+    </form>
+
 </section>
-
-
-
 
 
 <footer class="footer">
     <hr>
+    
     <p>© 2025 Designed and Developed by John Carl Monacillo. All rights reserved.</p>
-  </footer>
+
+    <div class="footer-icons">
+        <a href="https://facebook.com/kaloy404" target="_blank">
+            <i class="fa-brands fa-facebook-f"></i>
+        </a>
+
+        <a href="https://github.com/kaloy404" target="_blank">
+            <i class="fa-brands fa-github"></i>
+        </a>
+
+        <a href="https://instagram.com/kaloy_404" target="_blank">
+            <i class="fa-brands fa-instagram"></i>
+        </a>
+    </div>
+</footer>
+<script src="js/index.js"></script>
 </body>
 </html>

@@ -70,6 +70,11 @@ nav a:hover,
     color: rgb(172, 39, 39);
 }
 
+nav a.active {
+    color: rgb(172, 39, 39);;   /* Your highlight color */
+    font-weight: 600;
+}
+
 
 /* HOME SECTION (like the sample layout) */
 .home-section {
@@ -452,23 +457,139 @@ nav a:hover,
     padding: 120px 80px; 
     min-height: 100vh;
     background-image: linear-gradient(to right, #0c0f15, #681c07);
+    color: white;
+}
+
+/* LEFT CONTENT */
+.contact-left {
+    flex: 1;
+}
+
+.contact-subtitle {
+    font-size: 1rem;
+    opacity: 0.8;
+    margin-bottom: 15px;
+    border-left: 3px solid #ff6f61;
+    padding-left: 10px;
+}
+
+.contact-title {
+    font-size: 2.8rem;
+    font-weight: 700;
+    margin-bottom: 35px;
+}
+
+.contact-submit-left {
+    padding: 12px 30px;
+    background: #ff6f61;
+    border: none;
+    color: white;
+    font-size: 1rem;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: 0.3s;
+}
+
+.contact-submit-left:hover {
+    opacity: .8;
+}
+
+/* RIGHT FORM SIDE */
+.contact-right {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 35px;
+}
+
+.form-group {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+}
+
+.form-group label {
+    font-size: 0.9rem;
+    margin-bottom: 8px;
+    opacity: 0.8;
+}
+
+.form-group input,
+.form-group textarea {
+    background: transparent;
+    border: none;
+    border-bottom: 1px solid #555;
+    padding: 8px 2px;
+    color: white;
+    font-size: 1rem;
+    outline: none;
+    resize: none;
+}
+
+.form-group input:focus,
+.form-group textarea:focus {
+    border-bottom-color: #ff6f61;
+}
+
+/* Make message box bigger */
+.form-group textarea {
+    height: 120px;
+}
+
+/* RESPONSIVE */
+@media (max-width: 900px) {
+    .contact-section {
+        flex-direction: column;
+        text-align: center;
+        gap: 50px;
+    }
+
+    .contact-right {
+        width: 100%;
+    }
 }
 
 /* FOOTER */
 .footer {
   width: 100%;
-  height: 100px;
   background: #111;
   color: #fff;
   text-align: center;
-  padding: 15px 0;
+  padding: 25px 0 40px; /* extra bottom space so icons fit */
   font-size: 0.9rem;
 }
 
 .footer hr {
   width: 80%;
-  margin: 0 auto 10px;
+  margin: 0 auto 15px;
   border: 0.5px solid #ccc;
+}
+
+/* ICONS WRAPPER – FIXED */
+.footer-icons {
+  margin-top: 15px;
+  display: flex;
+  justify-content: center;
+  gap: 25px; /* space between icons */
+}
+
+/* ICON STYLE */
+.footer-icons a {
+  width: 45px;
+  height: 45px;
+  background: #fff;
+  border-radius: 50%;
+  color: #000;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size: 1.3rem;
+  transition: 0.3s ease;
+}
+
+.footer-icons a:hover {
+  background: #ff6f61;
+  color: #fff;
 }
 
 /* Tablets */
