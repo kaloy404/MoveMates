@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html>
 <head>
@@ -23,7 +24,7 @@
     <a href="#tools">Projects</a>
     <a href="#contact">Contact</a>
 </nav>
-    <a href="login.php" class="logout">Logout</a>
+    <a href="logout.php" class="logout">Logout</a>
 </header>
 <section class="home-section" id="home">
     <div class="text-container">
@@ -33,7 +34,7 @@
 
         <div class="buttons">
             <a href="#contact" class="btn primary">Got a Project?</a>
-            <a href="#" class="btn outline">My Resume</a>
+            <a href="#" class="btn outline" id="downloadResume">My Resume</a>
         </div>
     </div>
 

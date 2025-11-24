@@ -2,9 +2,12 @@
 session_start();
 include 'db/db_connect.php';
 
-// PROCESS LOGIN
-if ($_SERVER["REQUEST_METHOD"] == "POST") {
+$status = ""; // success, error, or empty
+$old_uname = "";
+$old_psw   = "";
 
+// PROCESS LOGIN
+if ($_SERVER["REQUEST_METHOD"] === "POST") {
     $username = $_POST['uname'];
     $password = $_POST['psw'];
 
@@ -12,34 +15,37 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $result = $conn->query($sql);
 
     if ($result->num_rows > 0) {
-        // Instead of immediate PHP redirect, show a delay page
-        $_SESSION['login_success'] = true; // flag success for JS
+        // Successful login → redirect to index.php
+        $_SESSION['login_status'] = "success";
+        $_SESSION['old_uname'] = $username;
+        $_SESSION['old_psw'] = $password;
+        header("Location: login.php"); // JS will handle the delay and redirect
+        exit();
     } else {
-        $_SESSION['login_error'] = true;  // store error to show AFTER redirect
-        header("Location: login.php");     // redirect to avoid resubmission
+        // Failed login → store old inputs
+        $_SESSION['login_status'] = "error";
+        $_SESSION['old_uname'] = $username;
+        $_SESSION['old_psw'] = $password;
+        header("Location: login.php");
         exit();
     }
 
     $conn->close();
 }
 
-$errorClass = "";
-$showError = false;
+// AFTER REDIRECT — GET STATUS AND OLD INPUTS
+$status = $_SESSION['login_status'] ?? '';
 
-// SHOW ERROR ONLY ONCE AFTER REDIRECT
-if (!empty($_SESSION['login_error'])) {
-    $errorClass = "input-error";
-    $showError = true;
-    unset($_SESSION['login_error']); // remove error so refresh shows nothing
+// Only populate old inputs if login failed
+if ($status === "error") {
+    $old_uname = $_SESSION['old_uname'] ?? '';
+    $old_psw   = $_SESSION['old_psw'] ?? '';
 }
 
-// CHECK FOR SUCCESS FLAG
-$loginSuccess = false;
-if (!empty($_SESSION['login_success'])) {
-    $loginSuccess = true;
-    unset($_SESSION['login_success']);
-}
+// Clear the session values so refresh won't retrigger login processing
+unset($_SESSION['login_status'], $_SESSION['old_uname'], $_SESSION['old_psw']);
 ?>
+
 <!DOCTYPE html>
 <html>
 <head>
@@ -47,6 +53,7 @@ if (!empty($_SESSION['login_success'])) {
     <meta name='viewport' content='width=device-width, initial-scale=1'>
     <title>Login</title>
     <link rel='stylesheet' href='css/login.css'>
+    <link rel="icon" href="img/ai-unscreen.gif">
 </head>
 <body>
 
@@ -76,46 +83,19 @@ if (!empty($_SESSION['login_success'])) {
     <div class="container">
 
         <label><b>Username</b></label>
-        <input type="text" placeholder="Enter Username" name="uname" 
-               class="<?php echo $errorClass; ?>" required>
+        <input type="text" placeholder="Enter Username" name="uname"  value="<?= htmlspecialchars($old_uname) ?>" required>
 
         <label><b>Password</b></label>
-        <input type="password" placeholder="Enter Password" name="psw" 
-               class="<?php echo $errorClass; ?>" required>
+        <input type="password" placeholder="Enter Password" name="psw" value="<?= htmlspecialchars($old_psw) ?>" required>
 
         <button type="submit">Login</button>
 
     </div>
 </form>
-
 <script>
-// SHOW ERROR IF LOGIN FAILED
-<?php if($showError): ?>
-document.getElementById("status-text").innerText = "Access Denied";
-
-// Remove red border after 3 seconds
-setTimeout(() => {
-    document.querySelectorAll('.input-error')
-        .forEach(el => el.classList.remove('input-error'));
-}, 1000);
-<?php endif; ?>
-
-// SUBMIT FORM: show loading overlay
-document.getElementById("loginForm").addEventListener("submit", function(e) {
-    document.getElementById("loading").style.display = "flex";
-});
-
-// IF LOGIN SUCCESSFUL: delay redirect
-<?php if($loginSuccess): ?>
-document.getElementById("status-text").innerText = "Access Granted";
-document.getElementById("loading").style.display = "flex";
-
-// delay 2 seconds before redirect
-setTimeout(() => {
-    window.location.href = "index.php";
-}, 5000);
-<?php endif; ?>
+    let loginStatus = "<?php echo $status; ?>";
 </script>
+<script src="js/login.js"></script>
 
 </body>
 </html>

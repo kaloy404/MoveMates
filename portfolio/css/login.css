@@ -88,11 +88,15 @@ body {
     text-align: center;
 }
 
+input {
+    transition: border 0.3s ease;
+}
 
-/* 🔴 Error border */
+/* Strong enough to override all your other input styles */
 .input-error {
     border: 2px solid red !important;
 }
+
 
 
 label {
@@ -101,11 +105,6 @@ label {
     font-weight: bold;
 }
 
-.input-error {
-    border: 2px solid red !important;
-    transition: border 0.1s ease;
-    animation: shake 0.3s ease-in-out;
-}
 
 @keyframes shake {
     0%   { transform: translateX(0); }
@@ -117,16 +116,25 @@ label {
 }
 
 
+.shake {
+    animation: shake 0.4s ease;
+}
+
 input[type="text"],
 input[type="password"] {
     width: 90%;
     padding: 18px;                     
     margin: 14px 0 25px 0;
-    border: none;
+    border: 2px solid transparent; /* reset */
     border-radius: 10px;
     background: rgba(255,255,255,0.90);
     font-size: 20px;                   
     outline: none;
+    
+}
+
+input:not(.input-error) {
+    border-color: transparent; /* normal look */
 }
 
 button {

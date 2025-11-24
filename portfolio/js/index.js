@@ -31,3 +31,18 @@ navLinks.forEach(link => {
     target.scrollIntoView({ behavior: "smooth" });
   });
 });
+
+document.getElementById("downloadResume").addEventListener("click", function(e) {
+    e.preventDefault(); // Prevent default link behavior
+
+    // Path to your resume file
+    const fileUrl = "files/Resume.pdf";  // adjust the path
+
+    // Create a temporary link element
+    const a = document.createElement("a");
+    a.href = fileUrl;
+    a.download = "Resume.pdf"; // file name for download
+    document.body.appendChild(a);
+    a.click(); // Trigger the download
+    document.body.removeChild(a); // Clean up
+});
