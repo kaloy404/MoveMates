@@ -1,0 +1,495 @@
+/* GENERAL PAGE STYLE */
+body { 
+    margin: 0;
+    font-family: Arial, sans-serif;
+    background: #f5f6fa;
+    display: flex;
+}
+
+/* LEFT SIDEBAR */
+.sidebar {
+    width: 180px;
+    background: #0f1c2e;
+    color: white;
+    height: 100vh;
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+}
+
+/* LOGO AREA */
+.logo-area {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    margin-bottom: 40px;
+}
+
+.logo-area img {
+    width: 180px;
+    height: 180px;
+    border-radius: 6px;
+    object-fit: cover;
+    display: block;
+}
+
+.logo-text {
+    font-size: 20px;
+    font-weight: bold;
+}
+
+/* SIDEBAR MENU */
+.menu {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.menu-item {
+    text-decoration: none;
+    color: #c9d3e2;
+    font-size: 16px;
+    padding: 10px 15px;
+    border-radius: 8px;
+    transition: 0.25s ease;
+}
+
+.menu-item:hover {
+    background: rgba(255,255,255,0.12);
+    color: white;
+}
+
+/* LOGOUT */
+.menu-item.logout {
+    margin-top: auto;
+    color: #ff6b6b;
+}
+
+.menu-item.logout:hover {
+    background: rgba(255,0,0,0.15);
+    color: #ff8989;
+}
+
+/* MAIN CONTENT */
+.main {
+    flex: 1;
+    padding: 20px 30px;
+}
+
+/* HEADER TITLE */
+.task-header {
+    font-size: 22px;
+    font-weight: bold;
+    margin-bottom: 20px;
+
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+/* ACTION BUTTONS (Calendar + Create Task) */
+.task-actions {
+    display: flex;
+    gap: 10px;
+}
+
+.calendar-btn,
+.create-task-btn {
+    background: #0f62fe;
+    border: none;
+    padding: 10px 16px;
+    border-radius: 8px;
+    cursor: pointer;
+    color: white;
+    font-size: 15px;
+    font-weight: bold;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    transition: 0.2s;
+}
+
+.calendar-btn:hover,
+.create-task-btn:hover {
+    background: #0047c2;
+}
+
+.calendar-btn i,
+.create-task-btn i {
+    color: white;
+}
+
+/* BOARD LAYOUT */
+.board {
+    display: flex;
+    gap: 25px;
+}
+
+/* INDIVIDUAL COLUMNS */
+.column {
+    background: white;
+    padding: 15px;
+    border-radius: 10px;
+    width: 24%;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+    min-height: 70vh;
+}
+
+/* COLUMN HEADERS */
+.column-header {
+    width: 90%;
+    height: 30px;
+    border-radius: 30px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: bold;
+    font-size: 18px;
+    color: white;
+    margin: 0 auto 15px auto;
+}
+
+.column-header.pending {
+    background: gray;
+}
+
+.column-header.in-progress {
+    background: #ebb82e;
+}
+
+.column-header.completed {
+    background: #26a726;
+}
+
+.column-header.overdue {
+    background: #b12c2c;
+}
+
+/* TASK CARD */
+.task {
+    background: #fafbff;
+    padding: 12px;
+    border-radius: 8px;
+    margin-bottom: 10px;
+    position: relative;
+    cursor: pointer;
+    overflow: hidden;
+    transition: 0.2s ease;
+}
+
+/* BLUE HIGHLIGHT BAR */
+.task::before {
+    content:"";
+    position: absolute;
+    top: 0; left: 0;
+    height: 100%;
+    width: 5px;
+    background: #6c8cff;
+    border-radius: 8px 0 0 8px;
+    transition: 0.3s ease;
+}
+
+.task:hover::before {
+    width: 100%;
+    opacity: 0.15;
+}
+
+.task:hover {
+    background: #eef1ff;
+}
+
+.task-title {
+    font-size: 15px;
+    font-weight: 600;
+    margin-bottom: 5px;
+}
+
+.due {
+    color: #e34d4d;
+    font-size: 12px;
+}
+
+/* ========================= */
+/* MODALS (Updated + Fixed) */
+/* ========================= */
+
+/* BACKGROUND (two types: details & create) */
+.details-bg,
+.create-bg {
+    display: none;
+    position: fixed;
+    top: 0; left: 0;
+    width: 100%; height: 100%;
+    background: rgba(0,0,0,0.45);
+    justify-content: center;
+    align-items: center;
+    backdrop-filter: blur(4px);
+    z-index: 2000;
+}
+
+/* MODAL BOX */
+.modal {
+    background: #ffffff;
+    padding: 25px 30px;
+    border-radius: 18px;
+    width: 440px;
+    box-shadow: 0 12px 40px rgba(0,0,0,0.18);
+    animation: popup 0.25s ease-out;
+    font-family: "Segoe UI", Arial, sans-serif;
+}
+
+/* Larger modal only for Create Task */
+.create-bg .modal {
+    width: 520px;
+}
+
+/* Modal animation */
+@keyframes popup {
+    from { transform: scale(0.90); opacity: 0; }
+    to   { transform: scale(1); opacity: 1; }
+}
+
+/* Modal Title */
+.modal h3 {
+    margin-top: 0;
+    margin-bottom: 18px;
+    font-size: 22px;
+    font-weight: 700;
+    color: #222;
+}
+
+/* Form Fields */
+.create-form {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    gap: 18px;  /* equal spacing between inputs */
+}
+
+/* Ensure each row fills the modal width */
+.create-form .row {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+}
+
+.create-form label {
+    font-size: 14px;
+    margin-bottom: 4px;
+    font-weight: 600;
+    color: #444;
+}
+
+.create-form input,
+.create-form textarea,
+.create-form select {
+    width: 100% !important;
+    padding: 12px 14px;
+    border: 1px solid #c9c9c9;
+    border-radius: 7px;
+    font-size: 15px;
+    background: #fafafa;
+    transition: 0.2s ease;
+    box-sizing: border-box;
+}
+
+.create-form input:focus,
+.create-form textarea:focus,
+.create-form select:focus {
+    border-color: #7b61ff;
+    background: #fff;
+    box-shadow: 0 0 0 3px rgba(123, 97, 255, 0.25);
+}
+
+/* Modal Buttons */
+.modal button {
+    padding: 10px 16px;
+    border-radius: 10px;
+    border: none;
+    cursor: pointer;
+    font-size: 14px;
+    transition: 0.2s ease;
+}
+
+.close-btn,
+.cancel-btn {
+    background: #e6e6e6;
+    color: #333;
+}
+
+.close-btn:hover,
+.cancel-btn:hover {
+    background: #d3d3d3;
+}
+
+.modal button[type="submit"],
+.create-btn {
+    background: #7b61ff;
+    color: white;
+    font-weight: 600;
+}
+
+.modal button[type="submit"]:hover,
+.create-btn:hover {
+    background: #684ff0;
+}
+
+/* Button positioning */
+.btn-container {
+    display: flex;
+    gap: 10px;
+    justify-content: flex-end;
+    margin-top: 12px;
+}
+
+/* Red delete/cancel button */
+.btn-cancel {
+    background: #c53030;
+    color: white;
+    padding: 9px 14px;
+    border-radius: 8px;
+}
+
+.btn-cancel:hover {
+    background: #a92828;
+}
+
+.status-btn {
+    width: 100%;
+    padding: 10px;
+    margin-top: 12px;
+    border: none;
+    border-radius: 6px;
+    font-size: 16px;
+    cursor: pointer;
+    color: white;
+}
+
+.status-btn.start {
+    background: #3498db;
+}
+
+.status-btn.done {
+    background: #27ae60;
+}
+
+.overdue-label {
+    background: #e74c3c;
+    color: white;
+    text-align: center;
+    padding: 10px;
+    margin-top: 12px;
+    border-radius: 6px;
+}
+/* =========================== */
+/* TASK DETAILS MODAL (unique) */
+/* =========================== */
+
+    
+
+/* BG */
+.details-bg {
+    display: none;
+    position: fixed;
+    inset: 0;
+    background: rgba(0,0,0,0.35);
+    justify-content: center;
+    align-items: center;
+    z-index: 3000;
+}
+
+/* Modal box */
+.task-details-modal {
+    width: 480px;
+    background: #e3e3e3;
+    padding: 30px 40px;
+    border-radius: 25px;
+    box-shadow: 0 8px 20px rgba(0,0,0,0.15);
+    transform: translateY(-20px);   /* move everything up */
+}
+
+/* Title centered */
+.details-title {
+    text-align: center;
+    font-size: 26px;
+    font-weight: bold;
+    margin-bottom: 25px;
+}
+
+/* Cleaner row layout */
+.detail-row {
+    display: grid;
+    grid-template-columns: 130px auto;  /* align left + right */
+    margin: 10px 0;
+    font-size: 16px;
+}
+
+.detail-row strong {
+    font-weight: bold;
+}
+
+/* Priority pill */
+#m_priority {
+    padding: 5px 14px;
+    border-radius: 20px;
+    color: white;
+    font-weight: bold;
+    display: inline-block;
+    width: 60px;
+    text-align: center;
+}
+
+/* Priority colors */
+#taskDetails-bg #m_priority.high { background: #b40039 !important; }
+#taskDetails-bg #m_priority.medium { background: #ff9800 !important; }
+#taskDetails-bg #m_priority.low { background: #4caf50 !important; }
+
+/* Countdown box */
+#countdownBox {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin: 20px auto;
+    background: white;
+    padding: 10px 20px;
+    border-radius: 12px;
+    width: fit-content;
+    font-size: 16px;
+}
+
+/* BUTTONS ROW */
+.modal-buttons {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 25px;
+    padding: 0 5px;
+}
+
+/* Close button */
+.details-close-btn {
+    background: gray;
+    color: white;
+    border: none;
+    padding: 12px 30px;
+    border-radius: 10px;
+    cursor: pointer;
+    font-size: 16px;
+}
+
+/* Done button */
+.done-btn {
+    background: #28a745;
+    color: white;
+    border: none;
+    padding: 12px 30px;
+    border-radius: 10px;
+    cursor: pointer;
+    font-size: 16px;
+}
+
+.hidden {
+    display: none !important;
+}
+
+
