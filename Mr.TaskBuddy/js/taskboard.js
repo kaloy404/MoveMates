@@ -1,114 +1,167 @@
-/* ============================
-   TASK DETAILS MODAL
-============================ */
-let currentTaskId = null;
-function openTask(task) {
-    let modal = document.getElementById("taskDetails-bg");
-    currentTaskId = task.task_id;
+/* ============================================
+   GLOBAL VARIABLES
+============================================ */
+let currentTask = null;
+let countdownTimer = null;
 
-    // Insert values into spans
+/* ============================================
+   OPEN TASK MODAL
+============================================ */
+function openTask(task) {
+    currentTask = task;
+
+    const modal = document.getElementById("taskDetails-bg");
+    modal.style.display = "flex";
+
+    // Fill modal
     document.getElementById("m_title").textContent = task.title;
     document.getElementById("m_description").textContent = task.description;
     document.getElementById("m_user").textContent = task.user_name;
     document.getElementById("m_category").textContent = task.category_name;
     document.getElementById("m_status").textContent = task.status_type;
-    document.getElementById("m_due").textContent = task.due_date;
+    document.getElementById("m_due").textContent = task.due_date ?? "None";
     document.getElementById("m_created").textContent = task.created_at;
 
-    // --- PRIORITY HANDLING (only once) ---
+    // PRIORITY
     const p = document.getElementById("m_priority");
     p.textContent = task.priority;
-    p.classList.remove("high", "medium", "low");
+    p.className = "";
     p.classList.add(task.priority.toLowerCase());
-    // -------------------------------------
 
-     const countdownBox = document.getElementById("countdownBox");
-    // Show modal
-    modal.style.display = "flex";
+    // ACTION BUTTONS
+    updateModalButtons(task);
 
-    // If task is completed, hide countdown
-if (task.status_id == 3 || task.status_type === "Completed") {
-    countdownBox.classList.add("hidden");
-} else {
-    countdownBox.classList.remove("hidden");
-    startCountdown(task.due_date, task.status_id, task.task_id);
-
-        }
+    // COUNTDOWN (only if due date exists)
+    startCountdown(task);
 }
 
-function startCountdown(due, status, taskId) {
-    let countdownBox = document.getElementById("countdownBox");
-    let label = document.getElementById("countdownLabel");
-    let timer = document.getElementById("countdown");
+/* ============================================
+   SHOW CORRECT BUTTON INSIDE MODAL
+============================================ */
+function updateModalButtons(task) {
+    const container = document.getElementById("modalActionButtons");
+    container.innerHTML = "";
 
-    // Hide if task is completed
-    if (status == 3 || status == "Completed") {
-        countdownBox.classList.add("hidden");
+    if (task.status_id == 3) return; // Completed
+    if (task.status_id == 4) return; // Overdue
+
+    if (task.status_id == 1) {
+        container.innerHTML = `
+            <button class="start-btn" onclick="moveToInProgress(${task.task_id})">
+                Start Task
+            </button>`;
         return;
     }
 
-    if (!due || due === "0000-00-00 00:00:00") {
-        countdownBox.classList.add("hidden");
-        return;
+    if (task.status_id == 2) {
+        container.innerHTML = `
+            <button class="done-btn" onclick="markAsDone(${task.task_id})">
+                Mark as Done
+            </button>`;
     }
-
-    countdownBox.classList.remove("hidden");
-
-    function update() {
-        let now = new Date().getTime();
-        let end = new Date(due).getTime();
-        let diff = end - now;
-
-        // If expired → move to OVERDUE column
-        if (diff <= 0) {
-            timer.textContent = "Expired";
-            timer.style.color = "red";
-
-            // Prevent endless loops
-            countdownBox.classList.add("hidden");
-
-            // Move to overdue (status_id = 4)
-            setTaskToOverdue(taskId);
-
-            return;
-        }
-
-        let d = Math.floor(diff / (1000 * 60 * 60 * 24));
-        let h = Math.floor((diff / (1000 * 60 * 60)) % 24);
-        let m = Math.floor((diff / (1000 * 60)) % 60);
-        let s = Math.floor((diff / 1000) % 60);
-
-        timer.textContent = `${d}d ${h}h ${m}m ${s}s`;
-
-        setTimeout(update, 1000);
-    }
-
-    update();
 }
 
-function moveTaskToOverdue(taskId) {
+/* ============================================
+   MOVE → IN PROGRESS
+============================================ */
+function moveToInProgress(taskId) {
+    updateStatus(taskId, 2, "in-progress");
+}
+
+/* ============================================
+   MOVE → COMPLETED
+============================================ */
+function markAsDone(taskId) {
+    updateStatus(taskId, 3, "completed");
+}
+
+/* ============================================
+   GENERIC STATUS UPDATE FUNCTION
+============================================ */
+function updateStatus(taskId, newStatus, targetColumnClass) {
     fetch("update_task_status.php", {
         method: "POST",
         headers: { "Content-Type": "application/x-www-form-urlencoded" },
-        body: "task_id=" + taskId + "&status_id=4"  // 4 = overdue
+        body: "task_id=" + taskId + "&status_id=" + newStatus
     })
-    .then(res => res.text())
-    .then(data => {
-        console.log("Moved to overdue:", data);
-        location.reload(); 
+    .then(r => r.text())
+    .then(() => {
+        closeModal();
+        location.reload(); // ensure UI is correct
     });
 }
 
-
-
-function closeModal() {
-    document.getElementById("taskDetails-bg").style.display = "none"; // <-- updated
+/* ============================================
+   AUTO MOVE TO OVERDUE
+============================================ */
+function autoMoveToOverdue(taskId) {
+    fetch("update_task_status.php", {
+        method: "POST",
+        headers: { "Content-Type": "application/x-www-form-urlencoded" },
+        body: "task_id=" + taskId + "&status_id=4"
+    }).then(() => location.reload());
 }
 
+/* ============================================
+   COUNTDOWN TIMER (Due Date Optional)
+============================================ */
+function startCountdown(task) {
+    const box = document.getElementById("countdownBox");
+    const timer = document.getElementById("countdown");
 
-/* ============================
-   CREATE TASK MODAL
-============================ */
+    clearTimeout(countdownTimer);
+
+    // No due date → no countdown
+    if (!task.due_date || task.due_date === "0000-00-00 00:00:00") {
+        box.classList.add("hidden");
+        return;
+    }
+
+    // Completed or manually overdue → hide countdown
+    if (task.status_id == 3 || task.status_id == 4) {
+        box.classList.add("hidden");
+        return;
+    }
+
+    box.classList.remove("hidden");
+
+    function tick() {
+        const now = Date.now();
+        const due = new Date(task.due_date).getTime();
+        
+        if (isNaN(due)) {
+            box.classList.add("hidden");
+            return;
+        }
+
+        const diff = due - now;
+
+        if (diff <= 0) {
+            timer.textContent = "Expired";
+            autoMoveToOverdue(task.task_id);
+            return;
+        }
+
+        const d = Math.floor(diff / 86400000);
+        const h = Math.floor((diff / 3600000) % 24);
+        const m = Math.floor((diff / 60000) % 60);
+        const s = Math.floor((diff / 1000) % 60);
+
+        timer.textContent = `${d}d ${h}h ${m}m ${s}s`;
+
+        countdownTimer = setTimeout(tick, 1000);
+    }
+
+    tick();
+}
+
+/* ============================================
+   CLOSE MODALS
+============================================ */
+function closeModal() {
+    document.getElementById("taskDetails-bg").style.display = "none";
+}
+
 function openCreateModal() {
     document.getElementById("create-bg").style.display = "flex";
 }
@@ -116,58 +169,10 @@ function closeCreateModal() {
     document.getElementById("create-bg").style.display = "none";
 }
 
-
-/* ============================
-   ESCAPE HTML (Security)
-============================ */
-function escapeHtml(str) {
-    if (!str) return '';
-    return String(str)
-        .replaceAll('&', '&amp;')
-        .replaceAll('<', '&lt;')
-        .replaceAll('>', '&gt;')
-        .replaceAll('"', '&quot;')
-        .replaceAll("'", '&#039;');
-}
-
-
-/* ============================
-   CLOSE MODALS ON BG CLICK
-============================ */
-document.addEventListener("DOMContentLoaded", () => {
-
-    const modalBG = document.getElementById('taskDetails-bg');  // <-- updated
-    const createBG = document.getElementById('create-bg');
-
-    if (modalBG) {
-        modalBG.addEventListener('click', function (e) {
-            if (e.target === this) closeModal();
-        });
-    }
-
-    if (createBG) {
-        createBG.addEventListener('click', function (e) {
-            if (e.target === this) closeCreateModal();
-        });
-    }
+/* ============================================
+   BACKDROP CLOSE
+============================================ */
+document.addEventListener("click", (e) => {
+    if (e.target.id === "taskDetails-bg") closeModal();
+    if (e.target.id === "create-bg") closeCreateModal();
 });
-
-document.getElementById("doneTaskBtn").addEventListener("click", function () {
-    updateTaskStatusToCompleted(currentTaskId);
-});
-
-function updateTaskStatusToCompleted(taskId) {
-
-    fetch("update_task_status.php", {
-        method: "POST",
-        headers: { "Content-Type": "application/x-www-form-urlencoded" },
-        body: "task_id=" + taskId + "&status_id=3"
-    })
-    .then(response => response.text())
-    .then(data => {
-        console.log(data);
-        closeModal();
-        location.reload();
-    });
-
-}
