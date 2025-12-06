@@ -55,39 +55,6 @@ while ($row = $result->fetch_assoc()) {
     $statuses[$row['status_id']] = $row['status_type'];
 }
 
-
-/* ---------------------------------------------
-   HANDLE CREATE TASK
---------------------------------------------- */
-if ($_SERVER['REQUEST_METHOD'] === 'POST' && $_POST['action'] === 'create_task') {
-
-    $title        = $_POST['title'];
-    $description  = $_POST['description'];
-    $priority     = $_POST['priority'];
-    $user_id      = $userId;
-    $category_id  = $_POST['category_id'];
-    $status_id    = $_POST['status_id'];
-    $due_date     = $_POST['due_date'];
-
-    $stmt = $conn->prepare("
-        INSERT INTO Tasks 
-        (user_id, category_id, status_id, title, description, priority, due_date, created_at)
-        VALUES (?, ?, ?, ?, ?, ?, ?, NOW())
-    ");
-
-    $stmt->bind_param(
-        "iiissss",
-        $user_id, $category_id, $status_id,
-        $title, $description, $priority, $due_date
-    );
-
-    if ($stmt->execute()) {
-        echo "<script>alert('Task created successfully!'); window.location='taskboard.php';</script>";
-        exit;
-    }
-}
-
-
 /* ---------------------------------------------
    LOAD TASKS GROUPED BY STATUS
 --------------------------------------------- */
@@ -107,7 +74,11 @@ $sql = "
     LEFT JOIN Users u ON u.user_id = t.user_id
     LEFT JOIN Categories c ON c.category_id = t.category_id
     LEFT JOIN Status s ON s.status_id = t.status_id
-    ORDER BY t.created_at DESC
+    WHERE t.user_id = $userId
+    ORDER BY 
+        (t.due_date IS NULL OR t.due_date = '0000-00-00 00:00:00') ASC,
+        t.due_date ASC,
+        t.created_at DESC
 ";
 
 $result = $conn->query($sql);
@@ -153,6 +124,7 @@ while ($row = $result->fetch_assoc()) {
   <title>Taskboard</title>
   <link rel="stylesheet" href="css/taskboard.css">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+  <script src="https://unpkg.com/lucide@latest"></script>
 
 </head>
 
@@ -163,13 +135,25 @@ while ($row = $result->fetch_assoc()) {
         <img src="image/logo.png" alt="Logo">
     </div>
 
-    <div class="menu">
-        <a href="dashboard.php" class="menu-item">Dashboard</a>
-        <a href="#" class="menu-item">Task Board</a>
-        <a href="signin.php" class="menu-item logout">Logout</a>
-    </div>
-</div>
+   <div class="menu">
+       <a href="dashboard.php" class="menu-item active">
+    <i data-lucide="layout-dashboard"></i>
+    <span>Dashboard</span>
+</a>
 
+<a href="taskboard.php" class="menu-item">
+    <i data-lucide="square-check"></i>
+    <span>Taskboard</span>
+</a>
+
+<a href="logout.php" class="menu-item logout">
+    <i data-lucide="log-out"></i>
+    <span>Logout</span>
+</a>
+
+    </div>
+
+</div>
 
 <!-- MAIN CONTENT -->
 <div class="main">
@@ -182,6 +166,19 @@ while ($row = $result->fetch_assoc()) {
         <button class="create-task-btn" onclick="openCreateModal()">
             <i class="fa-solid fa-plus"></i> Create Task
         </button>
+        <button class="filter-btn" onclick="toggleCategoryFilter()">
+    <i class="fa-solid fa-bars"></i>
+</button>
+
+<div id="categoryFilter" class="category-filter">
+    <select id="categorySelect" onchange="filterByCategory()">
+        <option value="all">All Categories</option>
+        <?php foreach ($categories as $cid => $cname): ?>
+            <option value="<?= $cid ?>"><?= htmlspecialchars($cname) ?></option>
+        <?php endforeach; ?>
+    </select>
+</div>
+
     </div>
 </div>
 
@@ -189,7 +186,7 @@ while ($row = $result->fetch_assoc()) {
 <div class="board">
 
     <!-- NOT STARTED -->
-    <div class="column">
+    <div class="column" data-status="1">
         <div class="column-header pending">Not Started</div>
 
         <?php foreach ($tasks['not-started'] as $t): ?>
@@ -209,7 +206,7 @@ while ($row = $result->fetch_assoc()) {
 
 
     <!-- IN PROGRESS -->
-    <div class="column">
+    <div class="column" data-status="2">
         <div class="column-header in-progress">In Progress</div>
 
         <?php foreach ($tasks['in-progress'] as $t): ?>
@@ -230,7 +227,7 @@ while ($row = $result->fetch_assoc()) {
 
 
     <!-- COMPLETED -->
-    <div class="column">
+    <div class="column" data-status="3">
         <div class="column-header completed">Completed</div>
 
         <?php foreach ($tasks['completed'] as $t): ?>
@@ -246,7 +243,7 @@ while ($row = $result->fetch_assoc()) {
 
 
     <!-- OVERDUE -->
-    <div class="column" id="overdueColumn">
+    <div class="column" id="overdueColumn" data-status="4">
         <div class="column-header overdue">Overdue</div>
 
         <?php foreach ($tasks['overdue'] as $t): ?>
@@ -265,11 +262,15 @@ while ($row = $result->fetch_assoc()) {
 </div> <!-- end main -->
 
 
-
+<script>
+    lucide.createIcons();
+</script>
 <!-- MODALS -->
 <?php include 'task_modals.php'; ?>
-
+<?php include 'calendar.php'; ?>
+<script>
+   const tasksFromPHP = <?= json_encode($tasks_flat); ?>;
+</script>
 <script src="js/taskboard.js"></script>
-
 </body>
 </html>

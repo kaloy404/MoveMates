@@ -12,11 +12,11 @@ body {
     background: #0f1c2e;
     color: white;
     height: 100vh;
+    position: fixed;
     padding: 20px;
     display: flex;
     flex-direction: column;
 }
-
 /* LOGO AREA */
 .logo-area {
     display: flex;
@@ -39,6 +39,7 @@ body {
     font-weight: bold;
 }
 
+/* SIDEBAR MENU FIX */
 /* SIDEBAR MENU */
 .menu {
     display: flex;
@@ -47,12 +48,21 @@ body {
 }
 
 .menu-item {
+    display: flex;
+    align-items: center;
+    gap: 12px;
     text-decoration: none;
     color: #c9d3e2;
     font-size: 16px;
     padding: 10px 15px;
     border-radius: 8px;
     transition: 0.25s ease;
+}
+
+.menu-item i {
+    width: 20px;
+    height: 20px;
+    stroke: #cfd8e3;
 }
 
 .menu-item:hover {
@@ -71,10 +81,12 @@ body {
     color: #ff8989;
 }
 
+
 /* MAIN CONTENT */
 .main {
     flex: 1;
     padding: 20px 30px;
+     margin-left: 220px;  /* Same as sidebar width */
 }
 
 /* HEADER TITLE */
@@ -464,6 +476,7 @@ body {
     justify-content: space-between;
     margin-top: 25px;
     padding: 0 5px;
+    
 }
 
 /* Close button */
@@ -488,8 +501,293 @@ body {
     font-size: 16px;
 }
 
+.start-btn{
+    background: #1c2fd4;
+    color: white;
+    border: none;
+    padding: 12px 30px;
+    border-radius: 10px;
+    cursor: pointer;
+    font-size: 16px;
+}
+
 .hidden {
     display: none !important;
 }
 
+.filter-btn {
+    background: #0f62fe;
+    color: white;
+    border: none;
+    padding: 10px 14px;
+    border-radius: 6px;
+    cursor: pointer;
+    font-size: 18px;
+}
 
+.category-filter {
+    display: none;
+    position: absolute;
+    right: 20px;
+    top: 70px;
+    background: white;
+    padding: 10px;
+    border-radius: 8px;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+}
+
+.category-filter select {
+    padding: 8px;
+    width: 200px;
+    border-radius: 6px;
+    border: 1px solid #ccc;
+}
+
+.modal-content {
+    position: relative; /* So stamp positions correctly */
+}
+
+.status-stamp {
+    position: absolute;
+    bottom: 25px;
+    right: 25px;
+    width: 150px;
+    opacity: 0.85;
+    pointer-events: none; /* Click-through */
+}
+
+/* POPUP BACKDROP */
+/* ================================
+   CALENDAR MODAL BACKDROP
+================================ */
+.calendar-modal {
+    display: none; 
+    position: fixed;
+    top: 0; 
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    background: rgba(0, 0, 0, 0.55);
+    backdrop-filter: blur(4px);
+    justify-content: center;
+    align-items: center;
+    z-index: 9999;
+}
+
+/* ================================
+   CALENDAR BOX (CENTERED)
+================================ */
+.calendar-box {
+    width: 420px;
+    background: rgba(255, 255, 255, 0.2);
+    backdrop-filter: blur(20px);
+    padding: 25px;
+    border-radius: 18px;
+    box-shadow: 0 8px 20px rgba(0,0,0,0.25);
+    position: relative;
+    animation: fadeIn 0.3s ease-out;
+}
+
+/* Smooth fade animation */
+@keyframes fadeIn {
+    from { transform: scale(0.95); opacity: 0; }
+    to   { transform: scale(1); opacity: 1; }
+}
+
+/* ================================
+   CLOSE BUTTON
+================================ */
+.close-calendar {
+    position: absolute;
+    top: 12px;
+    right: 15px;
+    font-size: 28px;
+    cursor: pointer;
+    color: #fff;
+    font-weight: bold;
+    transition: 0.2s;
+}
+
+.close-calendar:hover {
+    color: #ff4d4d;
+}
+
+/* ================================
+   HEADER: month + nav buttons
+================================ */
+.calendar-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 15px;
+    color: white;
+}
+
+.calendar-header button {
+    background: rgba(255, 255, 255, 0.2);
+    border: none;
+    padding: 8px 12px;
+    border-radius: 8px;
+    color: white;
+    cursor: pointer;
+    font-size: 18px;
+    transition: 0.2s;
+}
+
+.calendar-header button:hover {
+    background: rgba(255, 255, 255, 0.35);
+}
+
+/* ================================
+   WEEKDAY LABELS
+================================ */
+.calendar-weekdays {
+    display: grid;
+    grid-template-columns: repeat(7, 1fr);
+    text-align: center;
+    margin-bottom: 10px;
+    color: white;
+    font-weight: bold;
+}
+
+/* ================================
+   DAYS GRID
+================================ */
+.calendar-days {
+    display: grid;
+    grid-template-columns: repeat(7, 1fr);
+    gap: 8px;
+}
+
+.today {
+    border: 2px solid #1e90ff;
+    border-radius: 6px;
+    font-weight: bold;
+    color: #1e90ff;
+}
+
+
+.calendar-days div {
+    position: relative;
+    height: 50px;
+    border-radius: 10px;
+    color: white;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: rgba(255, 255, 255, 0.15);
+    font-size: 16px;
+    cursor: pointer;
+    transition: 0.2s;
+}
+
+
+.calendar-days div:hover {
+    background: rgba(255, 255, 255, 0.3);
+}
+
+/* ================================
+   PRIORITY COLORS
+================================ */
+.high-task {
+    background: #bb1d1d !important;
+}
+
+.medium-task {
+    background: #dd9231 !important;
+}
+
+.low-task {
+    background: #309433 !important;
+}
+
+/* ================================
+   DOT COLORS
+================================ */
+.dot-high {
+    background: #bb1d1d  !important;
+}
+
+.dot-medium {
+    background: #dd9231 !important;
+}
+
+.dot-low {
+    background: #309433 !important;
+}
+
+/* Dot wrapper centered under the number */
+
+.dot-container {
+    position: absolute;  
+    top: 9px;                  /* place dots under the number */
+    left: 23%;                      /* horizontal center */
+    transform: translateX(-50%);    /* perfect center */
+    display: flex;
+    flex-direction: row;
+    gap: 4px;
+    background: transparent !important;
+    justify-content: center;
+}
+
+
+.task-dot {
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+}
+
+.day-number {
+    position: absolute;
+    top: 9px;
+    left: 50%;
+    transform: translateX(-50%);
+    font-size: 18px;
+    z-index: 5;
+}
+
+.task-dot {
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    z-index: 5;
+}
+
+.dot-container.single {
+    position: absolute;  
+    top: 9px;                  /* place dots under the number */
+    left: 52%;                      /* horizontal center */
+    transform: translateX(-50%);    /* perfect center */
+    display: flex;
+    flex-direction: row;
+    gap: 4px;
+    background: transparent !important;
+    justify-content: center;
+}
+
+.dropdown-alert {
+    position: fixed;
+    top: -60px;
+    left: 50%;
+    transform: translateX(-50%);
+    padding: 12px 20px;
+    border-radius: 6px;
+    font-size: 15px;
+    color: white;
+    opacity: 0;
+    transition: all 0.4s ease;
+    z-index: 9999;
+}
+
+.dropdown-alert.show {
+    top: 20px;
+    opacity: 1;
+}
+
+.success-alert {
+    background: #2ecc71;
+}
+
+.error-alert {
+    background: #e74c3c;
+}

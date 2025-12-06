@@ -4,38 +4,36 @@ include 'db/db_connect.php';
 
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
-    // Get form input
-    $email = $_POST['email'];
-    $password = $_POST['password'];
+    $email = trim($_POST['email']);
+    $password = trim($_POST['password']);
 
-    // Prepare SQL (Correct Column Names)
+    // Prepare query
     $query = "SELECT * FROM users WHERE user_email = ?";
     $stmt = $conn->prepare($query);
     $stmt->bind_param("s", $email);
     $stmt->execute();
     $result = $stmt->get_result();
 
-    // User found?
-    if ($result->num_rows === 1) {
-        $user = $result->fetch_assoc();
-
-        // Check password (no hashing)
-        if (password_verify($password, $user['user_password'])) {
-
-            // Store session
-            $_SESSION['user_id'] = $user['user_id']; 
-            $_SESSION['user_name'] = $user['user_name'];
-            $_SESSION['user_email'] = $user['user_email'];
-
-            header("Location: dashboard.php");
-            exit();
-        } else {
-            echo "Invalid Password";
-            exit();
-        }
-    } else {
-        echo "Email not found";
+    // Check if user exists
+    if ($result->num_rows !== 1) {
+        echo "invalid"; // email not found
         exit();
     }
+
+    $user = $result->fetch_assoc();
+
+    // Verify password
+    if (!password_verify($password, $user['user_password'])) {
+        echo "invalid"; // wrong password
+        exit();
+    }
+
+    // Login success → create session
+    $_SESSION['user_id'] = $user['user_id'];
+    $_SESSION['user_name'] = $user['user_name'];
+    $_SESSION['user_email'] = $user['user_email'];
+
+    echo "success"; // AJAX redirect will handle dashboard
+    exit();
 }
 ?>

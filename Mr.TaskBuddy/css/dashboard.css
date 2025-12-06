@@ -45,12 +45,21 @@ body {
 }
 
 .menu-item {
+    display: flex;
+    align-items: center;
+    gap: 12px;
     text-decoration: none;
     color: #c9d3e2;
     font-size: 16px;
     padding: 10px 15px;
     border-radius: 8px;
     transition: 0.25s ease;
+}
+
+.menu-item i {
+    width: 20px;
+    height: 20px;
+    stroke: #cfd8e3;
 }
 
 .menu-item:hover {

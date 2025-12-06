@@ -30,9 +30,9 @@
         <div class="modal-buttons">
             <button class="details-close-btn" onclick="closeModal()">Close</button>
              <!-- Dynamic Buttons Section (Start / Done) -->
-             <div id="modalActionButtons" style="margin: 15px 0;"></div>
+             <div id="modalActionButtons" ></div>
         </div>
-
+    <img id="statusStamp" class="status-stamp" style="display:none;">
     </div>
 </div>
 
@@ -45,7 +45,7 @@
     <div class="modal">
         <h3>Create Task</h3>
 
-        <form class="create-form" method="post" action="<?= htmlspecialchars($_SERVER['PHP_SELF']) ?>">
+        <form class="create-form" id="createForm">
             <input type="hidden" name="action" value="create_task">
 
             <div class="row">

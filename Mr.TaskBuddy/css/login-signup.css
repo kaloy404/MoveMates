@@ -122,22 +122,62 @@ input{
       .container{ width:92%; }
     }
 
-    .dropdown-alert {
+/* Base alert */
+.dropdown-alert {
     position: fixed;
-    top: -50px;
+    top: -60px;
     left: 50%;
     transform: translateX(-50%);
-    background: #2ecc71;
+    padding: 12px 20px;
+    border-radius: 6px;
+    font-size: 15px;
     color: white;
-    padding: 12px 25px;
-    border-radius: 8px;
-    font-size: 16px;
-    transition: 0.3s ease-in-out;
-    z-index: 9999;
     opacity: 0;
+    transition: all 0.4s ease;
+    z-index: 9999;
 }
 
+/* Success (green) */
+.success-alert {
+    background: #2ecc71;
+}
+
+/* Error (red) */
+.error-alert {
+    background: #e74c3c;
+}
+
+/* Slide down animation */
 .dropdown-alert.show {
     top: 20px;
     opacity: 1;
+}
+
+
+/* INVALID FIELD STYLE */
+.input-error {
+  border: 2px solid red !important;
+  animation: shake 0.3s ease;
+}
+
+@keyframes shake {
+  0% { transform: translateX(0); }
+  20% { transform: translateX(-5px); }
+  40% { transform: translateX(5px); }
+  60% { transform: translateX(-5px); }
+  80% { transform: translateX(5px); }
+  100% { transform: translateX(0); }
+}
+
+/* PASSWORD EYE ICON */
+.password-wrapper {
+  position: relative;
+}
+
+.password-wrapper i {
+  position: absolute;
+  right: 10px;
+  top: 50%;
+  transform: translateY(-50%);
+  cursor: pointer;
 }

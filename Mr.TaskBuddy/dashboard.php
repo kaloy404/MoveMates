@@ -8,7 +8,23 @@ if (!isset($_SESSION['user_id'])) {
     exit();
 }
 
+// Set user ID first (IMPORTANT)
 $userId = $_SESSION['user_id'];
+
+// Fetch user name safely
+$sqlUser = "SELECT user_name FROM users WHERE user_id = ?";
+$stmt = $conn->prepare($sqlUser);
+$stmt->bind_param("i", $userId);
+$stmt->execute();
+$result = $stmt->get_result();
+
+$user_name = "User"; // fallback
+
+if ($result && $result->num_rows > 0) {
+    $row = $result->fetch_assoc();
+    $user_name = $row['user_name'];
+}
+
 $today = date("Y-m-d");
 
 // ===== NOT STARTED (status_id = 1) =====
@@ -37,10 +53,21 @@ $completed = $stmt->get_result()->fetch_assoc()['count'];
 
 // ===== OVERDUE =====
 // overdue = due_date is past AND NOT completed
-$sqlOverdue = "SELECT COUNT(*) AS count FROM tasks 
-               WHERE user_id = ?
-               AND due_date < ?
-               AND status_id != 3";
+$sqlOverdue = "
+    SELECT COUNT(*) AS count 
+    FROM tasks
+    WHERE user_id = ?
+    AND (
+            (
+                due_date IS NOT NULL
+                AND due_date != '0000-00-00 00:00:00'
+                AND due_date < ?
+                AND (status_id = 1 OR status_id = 2)
+            )
+            OR status_id = 4
+        )
+";
+
 $stmt = $conn->prepare($sqlOverdue);
 $stmt->bind_param("is", $userId, $today);
 $stmt->execute();
@@ -57,6 +84,8 @@ $total_tasks = $not_started + $in_progress + $completed + $overdue;
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Dashboard</title>
   <link rel="stylesheet" href="css/dashboard.css">
+  <script src="https://unpkg.com/lucide@latest"></script>
+
 
   <!-- Chart.js -->
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
@@ -72,9 +101,21 @@ $total_tasks = $not_started + $in_progress + $completed + $overdue;
     </div>
 
     <div class="menu">
-        <a href="dashboard.php" class="menu-item active">Dashboard</a>
-        <a href="taskboard.php" class="menu-item">Task Board</a>
-        <a href="logout.php" class="menu-item logout">Logout</a>
+       <a href="dashboard.php" class="menu-item active">
+    <i data-lucide="layout-dashboard"></i>
+    <span>Dashboard</span>
+</a>
+
+<a href="taskboard.php" class="menu-item">
+    <i data-lucide="square-check"></i>
+    <span>Taskboard</span>
+</a>
+
+<a href="logout.php" class="menu-item logout">
+    <i data-lucide="log-out"></i>
+    <span>Logout</span>
+</a>
+
     </div>
 
 </div>
@@ -85,7 +126,9 @@ $total_tasks = $not_started + $in_progress + $completed + $overdue;
     <!-- TOP BAR -->
     <div class="topbar">
         <h2>Dashboard Overview</h2>
-        <input type="text" placeholder="Search...">
+        <h2>Hello, <?php echo htmlspecialchars($user_name); ?>!</h2>
+
+
     </div>
 
     <!-- NEW CARDS -->
@@ -153,6 +196,10 @@ new Chart(ctx, {
     }
 });
 </script>
+<script>
+    lucide.createIcons();
+</script>
+
 
 </body>
 </html>

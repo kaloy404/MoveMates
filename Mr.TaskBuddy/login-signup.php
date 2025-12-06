@@ -21,7 +21,12 @@ include 'db/db_connect.php';
         <input type="text" id="nameField" name="name" placeholder="Name" style="display:none;" />
 
         <input type="text" id="email" name="email" placeholder="Email" required />
-        <input type="password" id="password" name="password" placeholder="Password" required />
+
+        <div class="password-wrapper">
+  <input type="password" id="password" name="password" placeholder="Password" required />
+  <i id="togglePassword">🙈</i>
+</div>
+
 
        <button class="btn" type="submit" id="submitBtn">Submit</button>
 
@@ -37,82 +42,7 @@ include 'db/db_connect.php';
     </div>
   </div>
 
-  <script>
-    const container = document.getElementById('container');
-    const switchBtn = document.getElementById('switch-btn');
-    const title = document.getElementById('form-title');
-    const nameField = document.getElementById('nameField');
-    const mainForm = document.getElementById('mainForm');
-
-    let signupMode = false;
-
-    switchBtn.addEventListener('click', () => {
-      signupMode = !signupMode;
-      container.classList.toggle('signup-mode');
-
-      title.textContent = signupMode ? 'Sign Up' : 'Login';
-      switchBtn.textContent = signupMode ? 'Go to Login' : 'Go to Signup';
-
-      nameField.style.display = signupMode ? 'block' : 'none';
-
-      // change action of form
-      mainForm.action = signupMode ? "signup_process.php" : "login_process.php";
-    });
-
-    function submitForm() {
-    const formData = new FormData(mainForm);
-
-    fetch(mainForm.action, {
-        method: "POST",
-        body: formData
-    })
-    .then(res => res.text())
-    .then(data => {
-
-        if (data.trim() === "success") {
-            showAlert("You have successfully signed up!");
-            mainForm.reset(); // optional clear fields after signup
-        } else {
-            showAlert("Error: " + data);
-        }
-
-    });
-}
-const submitBtn = document.getElementById("submitBtn");
-
-submitBtn.addEventListener("click", function (e) {
-    e.preventDefault();
-
-    // SIGNUP MODE → AJAX
-    if (signupMode) {
-        submitForm();
-    } 
-    // LOGIN MODE → normal form submit
-    else {
-        mainForm.submit();
-    }
-});
-
-
-// DROPDOWN ALERT
-function showAlert(message) {
-    let alertBox = document.createElement("div");
-    alertBox.className = "dropdown-alert";
-    alertBox.innerText = message;
-
-    document.body.appendChild(alertBox);
-
-    setTimeout(() => {
-        alertBox.classList.add("show");
-    }, 10);
-
-    setTimeout(() => {
-        alertBox.classList.remove("show");
-        setTimeout(() => alertBox.remove(), 300);
-    }, 3000);
-}
-
-  </script>
+  <script src="js/login-signup.js"></script>
 
 </body>
 </html>
