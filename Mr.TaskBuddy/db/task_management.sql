@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Dec 04, 2025 at 03:18 PM
+-- Generation Time: Dec 07, 2025 at 01:16 PM
 -- Server version: 10.4.32-MariaDB
 -- PHP Version: 8.4.13
 
@@ -80,18 +80,9 @@ CREATE TABLE `tasks` (
   `title` varchar(150) NOT NULL,
   `description` text DEFAULT NULL,
   `priority` varchar(10) DEFAULT NULL,
-  `comment` text DEFAULT NULL,
   `due_date` datetime DEFAULT NULL,
   `created_at` timestamp NOT NULL DEFAULT current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
-
---
--- Dumping data for table `tasks`
---
-
-INSERT INTO `tasks` (`task_id`, `user_id`, `category_id`, `status_id`, `title`, `description`, `priority`, `comment`, `due_date`, `created_at`) VALUES
-(1, 30, 2, 3, 'Task Manager', 'Using php, xampp.', 'High', NULL, '2025-12-10 18:00:00', '2025-12-04 11:37:05'),
-(2, 30, 4, 2, 'Dinner', 'Omellete', 'Medium', NULL, '2025-12-04 22:06:00', '2025-12-04 14:04:23');
 
 -- --------------------------------------------------------
 
@@ -111,9 +102,8 @@ CREATE TABLE `users` (
 --
 
 INSERT INTO `users` (`user_id`, `user_name`, `user_email`, `user_password`) VALUES
-(2, 'Jade Monacillo', 'moncarmz888@gmail.com', '$2y$12$RxkYfK6djlrfLh5.xgLyP.7nK1DQWpImZ1yYeslNXp2qSkN3MNO2O'),
-(27, 'Portfolio', 'johncarl_monacillo@uv.edu.ph', '$2y$12$f38Oe3910e7ML3m.iroHi.pZX7ntfIxywql32AJ8WQ00MO9pDMB8q'),
-(30, 'John Carl Monacillo', 'johnmonacillo53@gmail.com', '$2y$12$5hHsX2N1dYzl/MGyuPrhQ.W/a1Lh9lxnbZtOkG.8ffEiHx6Ja7qly');
+(34, 'John Carl Monacillo', 'johnmonacillo53@gmail.com', '$2y$12$16J5F12z3YsEjv5rE4k9OubBeSQJ6ail6qNjF9Xpb2Ei8Pow6sk9K'),
+(35, 'Jade Monacillo', 'moncarmz888@gmail.com', '$2y$12$8wmChOJAsvZzo2vdtG58pOE.xE8LHAM2.h3TWFUlkqkoOOasxvUG.');
 
 --
 -- Indexes for dumped tables
@@ -167,13 +157,13 @@ ALTER TABLE `status`
 -- AUTO_INCREMENT for table `tasks`
 --
 ALTER TABLE `tasks`
-  MODIFY `task_id` int(11) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+  MODIFY `task_id` int(11) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=153;
 
 --
 -- AUTO_INCREMENT for table `users`
 --
 ALTER TABLE `users`
-  MODIFY `user_id` int(11) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=31;
+  MODIFY `user_id` int(11) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=36;
 
 --
 -- Constraints for dumped tables

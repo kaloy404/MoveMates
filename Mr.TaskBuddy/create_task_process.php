@@ -10,6 +10,8 @@ if (!isset($_SESSION['user_id'])) {
 
 $userId = $_SESSION['user_id'];
 
+
+
 /* ----------------------------
    VALIDATE REQUIRED FIELDS
 ----------------------------- */
@@ -24,7 +26,6 @@ foreach ($required as $field) {
         exit;
     }
 }
-
 /* ----------------------------
    CLEAN INPUTS
 ----------------------------- */
@@ -34,6 +35,30 @@ $priority    = trim($_POST['priority']);
 $category    = intval($_POST['category_id']);
 $status      = intval($_POST['status_id']);
 $due         = !empty($_POST['due_date']) ? $_POST['due_date'] : null;
+
+/* ----------------------------
+   PREVENT DUPLICATE TITLES
+----------------------------- */
+$check = $conn->prepare("
+    SELECT task_id 
+    FROM tasks 
+    WHERE user_id = ? 
+    AND LOWER(title) = LOWER(?) 
+    AND status_id NOT IN (3, 4)
+    LIMIT 1
+");
+$check->bind_param("is", $userId, $title);
+$check->execute();
+$result = $check->get_result();
+
+if ($result->num_rows > 0) {
+    echo json_encode([
+        "status" => "error",
+        "duplicate" => true,
+        "message" => "A task with this title already exists."
+    ]);
+    exit;
+}
 
 /* ----------------------------
    SQL INSERT (7 columns)

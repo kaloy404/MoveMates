@@ -4,6 +4,7 @@ const title = document.getElementById('form-title');
 const nameField = document.getElementById('nameField');
 const mainForm = document.getElementById('mainForm');
 const submitBtn = document.getElementById("submitBtn");
+const forgotLink = document.getElementById("openForgot");
 
 let signupMode = false;
 
@@ -18,9 +19,12 @@ switchBtn.addEventListener('click', () => {
   switchBtn.textContent = signupMode ? 'Go to Login' : 'Go to Signup';
 
   nameField.style.display = signupMode ? 'block' : 'none';
+  forgotLink.style.display = signupMode ? 'none' : 'block';
   mainForm.action = signupMode ? "signup_process.php" : "login_process.php";
   mainForm.reset();
 });
+  
+
 
 /* ==========================================================
    ERROR EFFECT (RED BORDER + SHAKE + REMOVE AFTER 1.5 SEC)
@@ -169,7 +173,7 @@ function submitSignup() {
     // EMPTY FIELDS
     if (!validateFields()){
 
-        showError("Fill all the Fields.");
+        showError("All fields are required.");
         addErrorEffect([emailInput, password, nameField]);
         return;
     } 
@@ -224,7 +228,7 @@ function submitLogin() {
 
     if (!validateFields()){
 
-        showError("Fill all the Fields.");
+        showError("All fields are required.");
         addErrorEffect([emailInput, password]);
         return;
     } 
@@ -266,13 +270,96 @@ submitBtn.addEventListener("click", function (e) {
 });
 
 /* ==========================================================
+   FORGOT PASSWORD MODAL OPEN / CLOSE
+========================================================== */       
+const openForgot = document.getElementById("openForgot");
+const closeForgot = document.getElementById("forgotClose");
+
+openForgot.addEventListener("click", (e) => {
+    e.preventDefault();
+    mainForm.reset();
+    forgotModal.style.display = "flex";  // SHOW MODAL
+});
+
+closeForgot.addEventListener("click", () => {
+    forgotModal.style.display = "none";  // HIDE MODAL
+    forgotModal.querySelectorAll("input").forEach(input => input.value = "");
+});
+
+
+/* ==========================================================
+   FORGOT PASSWORD SUBMIT
+========================================================== */
+document.getElementById("forgotSubmit").addEventListener("click", () => {
+
+    let email = document.getElementById("forgotEmail").value.trim();
+    let newPass = document.getElementById("forgotNew").value.trim();
+    let confirmPass = document.getElementById("forgotConfirm").value.trim();
+
+    if (email === "" || newPass === "" || confirmPass === "") {
+        showError("All fields are required.");
+        addErrorEffect([
+            document.getElementById("forgotEmail"),
+            document.getElementById("forgotNew"),
+            document.getElementById("forgotConfirm")
+            ]);
+
+        return;
+    }
+
+    if (newPass !== confirmPass) {
+        showError("Passwords do not match.");
+        addErrorEffect([
+            document.getElementById("forgotNew"),
+            document.getElementById("forgotConfirm")
+            ]);
+        return;
+    }
+
+    if (newPass.length < 6) {
+        showError("Password must be at least 6 characters.");
+        addErrorEffect([
+            document.getElementById("forgotNew"),
+            document.getElementById("forgotConfirm")
+            ]);
+        return;
+    }
+
+    let fd = new FormData();
+    fd.append("email", email);
+    fd.append("password", newPass);
+
+    fetch("forgot-process.php", {
+        method: "POST",
+        body: fd
+    })
+    .then(res => res.json())
+    .then(data => {
+
+        if (data.status === "success") {
+            showSuccess(data.message);
+            forgotModal.style.display = "none";
+        } else {
+            showError(data.message);
+              if (data.message.toLowerCase().includes("email")) {
+                addErrorEffect([document.getElementById("forgotEmail")]);
+        }
+    }       
+    })
+    .catch(() => {
+        showError("Server error.");
+    });
+});
+
+/* ==========================================================
    SHOW / HIDE PASSWORD
 ========================================================== */
-const togglePassword = document.getElementById("togglePassword");
-const passwordInput = document.getElementById("password");
+document.querySelectorAll("#togglePassword").forEach(icon => {
+    icon.addEventListener("click", () => {
+        const input = icon.previousElementSibling;
 
-togglePassword.addEventListener("click", () => {
-    const type = passwordInput.type === "password" ? "text" : "password";
-    passwordInput.type = type;
-    togglePassword.textContent = type === "password" ? "🙈" : "👁️";
+        input.type = input.type === "password" ? "text" : "password";
+
+        icon.textContent = input.type === "password" ? "🙈" : "👁️";
+    });
 });

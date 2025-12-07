@@ -1,8 +1,10 @@
 document.addEventListener("DOMContentLoaded", () => {
-    const createForm = document.getElementById("createForm");
 
-    if (!createForm) {
-        console.error("Create Form not found.");
+    const createForm = document.getElementById("createForm");
+    const titleInput = document.querySelector("#title");
+
+    if (!createForm || !titleInput) {
+        console.error("Create form or title input not found.");
         return;
     }
 
@@ -17,25 +19,47 @@ document.addEventListener("DOMContentLoaded", () => {
         })
         .then(res => res.json())
         .then(data => {
-            console.log("Create Task Response:", data);
 
+            /* -----------------------------------
+               DUPLICATE TITLE HANDLING
+            ----------------------------------- */
+            if (data.status === "error" && data.duplicate) {
+
+                // Remove old error state (IMPORTANT)
+                titleInput.classList.remove("input-error", "shake");
+
+                // Force reflow so animation restarts
+                void titleInput.offsetWidth;
+
+                // Add back the error styles
+                titleInput.classList.add("input-error", "shake");
+
+                // Remove only shake animation after done
+                setTimeout(() => titleInput.classList.remove("shake"), 400);
+
+                showErrorAlert(data.message);
+                return;
+            }
+
+            /* -----------------------------------
+               GENERAL ERRORS
+            ----------------------------------- */
+            if (data.status === "error") {
+                showErrorAlert(data.message);
+                return;
+            }
+
+            /* -----------------------------------
+               SUCCESS
+            ----------------------------------- */
             if (data.status === "success") {
-
                 showSuccessAlert("Task Created!");
-
-                // Close modal
                 closeCreateModal();
-                
-
-                // Reload page to show correct tasks
                 setTimeout(() => location.reload(), 600);
-
-            } else {
-                showErrorAlert(data.message || "Failed to create task.");
             }
         })
         .catch(err => {
-            console.error("Create Task Error:", err);
+            console.error(err);
             showErrorAlert("Something went wrong.");
         });
     });

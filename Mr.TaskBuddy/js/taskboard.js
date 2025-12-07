@@ -84,32 +84,31 @@ function updateModalButtons(task) {
    MOVE → IN PROGRESS
 ============================================ */
 function moveToInProgress(taskId) {
-    updateStatus(taskId, 2, "in-progress");
-    showSuccessAlert("Task Started!!!");
+    updateStatus(taskId, 2, "in-progress", "Task started.");
     setTimeout(() => {
-        location.reload();
-    }, 3000); 
+                location.reload();
+                 }, 3000);
 }
+
 /* ============================================
    MOVE → COMPLETED
 ============================================ */
 function markAsDone(taskId) {
-    updateStatus(taskId, 3, "completed");
-    showSuccessAlert("Task Completed");
+    updateStatus(taskId, 3, "completed", "Task marked as done!");
     setTimeout(() => {
-        location.reload();
-    }, 3000); 
-    
+                location.reload();
+                 }, 3000);
 }
 /* ============================================
    AUTO MOVE TO OVERDUE
 ============================================ */
 function autoMoveToOverdue(taskId) {
-    updateStatus(taskId, 4); 
-    showErrorAlert("1 Task Overdue");
-    setTimeout(() => {
-        location.reload();
-    }, 3000); 
+    fetch("update_task_status.php", {
+        method: "POST",
+        headers: { "Content-Type": "application/x-www-form-urlencoded" },
+        body: "task_id=" + taskId + "&status_id=4"
+    }).then(() => location.reload());
+
 }
 
 
@@ -124,93 +123,42 @@ function updateStatus(taskId, newStatus) {
     })
     .then(r => r.text())
     .then(() => {
+        closeModal();
 
-        // 1️⃣ Find the task card in the DOM
-        const card = document.querySelector(`.task[data-task-id='${taskId}']`);
+        const taskCard = document.querySelector(`.task[data-task-id='${taskId}']`);
+        const columns = document.querySelectorAll(".column");
 
-        if (!card) {
-            console.error("Task card not found:", taskId);
-            return;
-        }
+        if (!taskCard) return;
 
-        // 2️⃣ Find target column — FIXED
-        const targetColumn = document.querySelector(`.column[data-status='${newStatus}']`);
+        // Fade out animation
+        taskCard.style.transition = "0.3s";
+        taskCard.style.opacity = "0";
 
-        if (!targetColumn) {
-            console.error("Target column not found:", newStatus);
-            return;
-        }
+        setTimeout(() => {
+            // Remove the card from current column
+            taskCard.remove();
 
-        // 3️⃣ Move card into the column
-        targetColumn.appendChild(card);
+            // Insert card to the correct column
+            if (newStatus == 1) columns[0].appendChild(taskCard);  // Not started
+            if (newStatus == 2) columns[1].appendChild(taskCard);  // In progress
+            if (newStatus == 3) columns[2].appendChild(taskCard);  // Completed
 
-        // 🔥 Update the stored task object inside the card
-        let taskData = JSON.parse(card.dataset.task);
-        taskData.status_id = newStatus;
-        card.dataset.task = JSON.stringify(taskData);
+            // Fade in animation
+            taskCard.style.opacity = "1";
 
+            // Success Alerts
+            if (newStatus == 2) showSuccessAlert("Task Started!");
+            if (newStatus == 3) showSuccessAlert("Task Completed!");
 
-        // 4️⃣ Update due date display
-        const due = card.querySelector(".due");
-
-        if (newStatus == 3) {
-            if (due) due.remove(); // Completed → no due date
-        }
-        else if (newStatus == 4) {
-            if (due) {
-                due.classList.add("overdue");
-                due.innerText = "Overdue";
-            } else {
-                card.insertAdjacentHTML("beforeend", `<div class="due overdue">Overdue!</div>`);
-            }
-        }
-        closeModal();   
-        // 5️⃣ Animation
-        card.classList.add("moved");
-        setTimeout(() => card.classList.remove("moved"), 300);
+        }, 250);
     });
 }
 
-function addTaskToBoard(task) {
 
-    const column = document.querySelector(`[data-status='${task.status_id}']`);
-    if (!column) return;
-
-    const card = document.createElement("div");
-    card.classList.add("task");
-    card.setAttribute("data-task-id", task.task_id);
-
-    // 🔥 STORE FULL TASK FOR THE MODAL
-    card.dataset.task = JSON.stringify(task);
-
-    let dueHTML = "";
-
-    if (task.status_id == 3) {
-        dueHTML = "";
-    } 
-    else if (task.status_id == 4) {
-        dueHTML = `<div class="due overdue">Overdue!</div>`;
-    } 
-    else {
-        dueHTML = task.due_date ? `<div class="due">Due on ${task.due_date}</div>` : "";
-    }
-
-    card.innerHTML = `
-        <div class="task-title">${task.title}</div>
-        ${dueHTML}
-    `;
-    column.appendChild(card);
-   
-
-}
 
 document.addEventListener("DOMContentLoaded", () => {
     const createForm = document.getElementById("createForm");
-
-    if (!createForm) {
-        console.error("Create Form not found.");
-        return;
-    }
+    if (!createForm) return;
 
     createForm.addEventListener("submit", function (e) {
         e.preventDefault();
@@ -223,26 +171,31 @@ document.addEventListener("DOMContentLoaded", () => {
         })
         .then(res => res.json())
         .then(data => {
-            console.log("Create Task Response:", data);
+
+            if (data.status === "error" && data.duplicate) {
+                showErrorAlert(data.message);
+                return;
+            }
+
+            if (data.status === "error") {
+                showErrorAlert(data.message);
+                return;
+            }
 
             if (data.status === "success") {
-
-                addTaskToBoard(data.task);
-                showSuccessAlert("Successfully created a task!");
-                closeCreateModal(); 
-                setTimeout(() => {
-                   location.reload();
-                      }, 3000); 
-            } else {
-                showErrorAlert(data.message || "Failed to create task.");
+                showSuccessAlert("Task Created!");
+                closeCreateModal();
+                setTimeout(() => location.reload(), 600);
             }
+
         })
         .catch(err => {
-            console.error("Create Task Error:", err);
+            console.error(err);
             showErrorAlert("Something went wrong.");
         });
     });
 });
+
 function showSuccessAlert(message) {
     let alertBox = document.createElement("div");
     alertBox.className = "dropdown-alert success-alert";

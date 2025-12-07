@@ -7,6 +7,7 @@ include 'db/db_connect.php';
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Login-Signup</title>
+  <link rel="icon" href="image/logo.png">
   <link rel="stylesheet" href="css/login-signup.css">
 </head>
 <body>
@@ -26,7 +27,9 @@ include 'db/db_connect.php';
   <input type="password" id="password" name="password" placeholder="Password" required />
   <i id="togglePassword">🙈</i>
 </div>
-
+<div class="forgot-pass-wrapper">
+   <a href="#" id="openForgot" class="forgot-link">Forgot Password?</a>
+</div>
 
        <button class="btn" type="submit" id="submitBtn">Submit</button>
 
@@ -42,7 +45,29 @@ include 'db/db_connect.php';
     </div>
   </div>
 
-  <script src="js/login-signup.js"></script>
+
+<div id="forgotModal" class="forgot-modal">
+    <div class="forgot-box">
+        <h3>Reset Password</h3>
+
+        <input type="email" id="forgotEmail" placeholder="Enter your email">
+        <div class="password-wrapper">
+        <input type="password" id="forgotNew" name="password"placeholder="New Password">
+        <i id="togglePassword">🙈</i>
+        </div>
+        <div class="password-wrapper">
+        <input type="password" id="forgotConfirm" name="password" placeholder="Confirm Password">
+        <i id="togglePassword">🙈</i>
+        </div>
+         <div class="forgot-buttons">
+            <button id="forgotSubmit" class="primary-btn">Update Password</button>
+            <button id="forgotClose" class="cancel-btn">Cancel</button>
+        </div>
+    </div>
+</div>
+
+
+<script src="js/login-signup.js"></script>
 
 </body>
 </html>

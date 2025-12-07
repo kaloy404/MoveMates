@@ -1,9 +1,6 @@
 <!-- ============================
      TASK DETAILS MODAL
 ============================ -->
-<!-- ============================
-     TASK DETAILS MODAL
-============================ -->
 <div id="taskDetails-bg" class="details-bg" style="display:none;">
     <div class="task-details-modal">
 
@@ -50,7 +47,7 @@
 
             <div class="row">
                 <label>Title</label>
-                <input type="text" name="title" required>
+                <input type="text"  name="title" required>
             </div>
 
             <div class="row">
@@ -83,6 +80,7 @@
                 <select name="status_id" required>
                     <option value="" disabled selected>Select Status</option>
                     <?php foreach ($statuses as $id => $name): ?>
+                     <?php if ($id == 3 || $id == 4) continue; ?>
                         <option value="<?= $id ?>"><?= htmlspecialchars($name) ?></option>
                     <?php endforeach; ?>
                 </select>

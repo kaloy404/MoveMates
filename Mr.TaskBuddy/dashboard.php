@@ -83,6 +83,7 @@ $total_tasks = $not_started + $in_progress + $completed + $overdue;
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Dashboard</title>
+  <link rel="icon" href="image/logo.png">
   <link rel="stylesheet" href="css/dashboard.css">
   <script src="https://unpkg.com/lucide@latest"></script>
 
