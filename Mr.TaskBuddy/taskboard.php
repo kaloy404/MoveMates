@@ -137,12 +137,12 @@ while ($row = $result->fetch_assoc()) {
     </div>
 
    <div class="menu">
-       <a href="dashboard.php" class="menu-item active">
+       <a href="dashboard.php" class="menu-item ">
     <i data-lucide="layout-dashboard"></i>
     <span>Dashboard</span>
 </a>
 
-<a href="taskboard.php" class="menu-item">
+<a href="taskboard.php" class="menu-item active">
     <i data-lucide="square-check"></i>
     <span>Taskboard</span>
 </a>

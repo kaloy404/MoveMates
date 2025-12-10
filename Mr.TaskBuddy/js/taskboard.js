@@ -1,6 +1,4 @@
-/* ============================================
-   GLOBAL VARIABLES
-============================================ */
+
 let currentTask = null;
 let countdownTimer = null;
 
